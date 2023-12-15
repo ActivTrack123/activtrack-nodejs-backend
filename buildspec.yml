@@ -1,0 +1,12 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18  # Choose the Node.js version you want
+  pre_build:
+    commands:
+      - npm install  # Install project dependencies
+artifacts:
+  files:
+    - '**/*'

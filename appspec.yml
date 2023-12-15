@@ -1,0 +1,13 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /var/www/toucan-backend-nodejs-v2
+    overwrite: true
+    
+hooks:
+  ApplicationStart:
+    - location: run-pm2-restart.sh
+      timeout: 300
+      runas: ubuntu
+      action: run
