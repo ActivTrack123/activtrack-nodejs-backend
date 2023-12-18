@@ -44,6 +44,10 @@ const AppConstants = {
     MEDIUM: "Medium",
     HIGH: "High",
   },
+  VesselStatus: {
+    ACTIVE: "Active",
+    INACTIVE: "Inactive",
+  },
   SubTaskStatus: {
     TODO: "Todo",
     ACTIVE: "Active",
