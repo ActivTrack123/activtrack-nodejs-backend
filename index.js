@@ -11,7 +11,10 @@ const userRoutes = require("./features/users/routes/user.routes");
 const accountRoutes = require("./features/accounts/routes/accounts.routes");
 const customerRoutes = require("./features/customers/routes/customer.routes");
 const contactRoutes = require("./features/contacts/routes/contacts.routes");
-const vesselRoutes = require("./features/portData/routes/Vessel.routes")
+const vesselRoutes = require("./features/portData/routes/Vessel.routes");
+const consigneeRoutes = require("./features/infoData/consignee/routes/consignee.routes");
+const carrierRoutes = require("./features/infoData/carriers/routes/carrier.routes");
+
 require("dotenv").config();
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 
@@ -55,6 +58,9 @@ app.use("/api/v1/account/", accountRoutes);
 app.use("/api/v1/customer/", customerRoutes);
 app.use("/api/v1/contact/", contactRoutes);
 app.use("/api/v1/vessel/", vesselRoutes);
+app.use("/api/v1/consignee/", consigneeRoutes);
+app.use("/api/v1/carrier/", carrierRoutes);
+
 // set port, listen for requests
 const APP_PORT = process.env.APP_PORT;
 app.use(require("express-status-monitor")());
