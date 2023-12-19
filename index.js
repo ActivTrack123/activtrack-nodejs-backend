@@ -14,6 +14,12 @@ const contactRoutes = require("./features/contacts/routes/contacts.routes");
 const vesselRoutes = require("./features/portData/routes/Vessel.routes");
 const consigneeRoutes = require("./features/infoData/consignee/routes/consignee.routes");
 const carrierRoutes = require("./features/infoData/carriers/routes/carrier.routes");
+const shipperRoutes = require("./features/infoData/shipper/routes/shipper.routes");
+const merchandiserRoutes = require("./features/infoData/merchandiser/routes/merchandiser.routes");
+const originRoutes = require("./features/infoData/origin/routes/origin.routes");
+const bookingTypeRoutes = require("./features/infoData/bookingType/routes/bookingType.routes");
+const incotermRoutes = require("./features/infoData/incoterms/routes/incoterms.routes");
+const serviceRoutes = require("./features/infoData/services/routes/services.routes");
 
 require("dotenv").config();
 require("dotenv").config({ path: path.join(__dirname, ".env") });
@@ -60,6 +66,12 @@ app.use("/api/v1/contact/", contactRoutes);
 app.use("/api/v1/vessel/", vesselRoutes);
 app.use("/api/v1/consignee/", consigneeRoutes);
 app.use("/api/v1/carrier/", carrierRoutes);
+app.use("/api/v1/shipper/", shipperRoutes);
+app.use("/api/v1/merchandiser/", merchandiserRoutes);
+app.use("/api/v1/origin/", originRoutes);
+app.use("/api/v1/bookingType/", bookingTypeRoutes);
+app.use("/api/v1/incoterm/", incotermRoutes);
+app.use("/api/v1/service/", serviceRoutes);
 
 // set port, listen for requests
 const APP_PORT = process.env.APP_PORT;
