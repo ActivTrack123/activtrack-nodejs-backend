@@ -28,7 +28,7 @@ const VesselSchema = new Schema({
     status: {
         type: String,
         required: true,
-        default: VesselStatus.PENDING
+        default: VesselStatus.INACTIVE
     },
     created: {
         type: Date,

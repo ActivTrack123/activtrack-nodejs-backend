@@ -12,6 +12,10 @@ const accountRoutes = require("./features/accounts/routes/accounts.routes");
 const customerRoutes = require("./features/customers/routes/customer.routes");
 const contactRoutes = require("./features/contacts/routes/contacts.routes");
 const vesselRoutes = require("./features/portData/routes/Vessel.routes")
+const transhipmentHubRoutes =require("./features/portData/routes/TranshipmentHub.routes")
+const portDataLoadingRoutes =require("./features/portData/routes/PortDataLoading.routes")
+const portDataDischargeRoutes =require("./features/portData/routes/PortDataDischarge.routes")
+const portDataReceiptRoutes =require("./features/portData/routes/PortDataReceipt.routes")
 require("dotenv").config();
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 
@@ -55,6 +59,11 @@ app.use("/api/v1/account/", accountRoutes);
 app.use("/api/v1/customer/", customerRoutes);
 app.use("/api/v1/contact/", contactRoutes);
 app.use("/api/v1/vessel/", vesselRoutes);
+app.use("/api/v1/transhipmentHub/", transhipmentHubRoutes);
+app.use("/api/v1/portDataLoading/", portDataLoadingRoutes);
+app.use("/api/v1/portDataDischarge/", portDataDischargeRoutes);
+app.use("/api/v1/portDataReceipt/", portDataReceiptRoutes);
+
 // set port, listen for requests
 const APP_PORT = process.env.APP_PORT;
 app.use(require("express-status-monitor")());
