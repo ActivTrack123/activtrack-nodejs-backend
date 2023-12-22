@@ -20,6 +20,7 @@ const originRoutes = require("./features/infoData/origin/routes/origin.routes");
 const bookingTypeRoutes = require("./features/infoData/bookingType/routes/bookingType.routes");
 const incotermRoutes = require("./features/infoData/incoterms/routes/incoterms.routes");
 const serviceRoutes = require("./features/infoData/services/routes/services.routes");
+const infoDataRoutes = require("./features/infoData/routes/infoData.routes");
 
 require("dotenv").config();
 require("dotenv").config({ path: path.join(__dirname, ".env") });
@@ -72,6 +73,7 @@ app.use("/api/v1/origin/", originRoutes);
 app.use("/api/v1/bookingType/", bookingTypeRoutes);
 app.use("/api/v1/incoterm/", incotermRoutes);
 app.use("/api/v1/service/", serviceRoutes);
+app.use("/api/v1/info-data/", infoDataRoutes);
 
 // set port, listen for requests
 const APP_PORT = process.env.APP_PORT;
