@@ -22,7 +22,27 @@ const AppConstants = {
     ACTIVE: "Active",
     INACTIVE: "Inactive",
   },
+
   ConsigneeStatus: {
+  TranshipmentHubStatus: {
+    ACTIVE: "Active",
+    INACTIVE: "Inactive",
+  },
+  PortDataLoadingStatus: {
+    ACTIVE: "Active",
+    INACTIVE: "Inactive",
+  },
+  PortDataDischargeStatus: {
+    ACTIVE: "Active",
+    INACTIVE: "Inactive",
+  },
+  PortDataReceiptStatus: {
+    ACTIVE: "Active",
+    INACTIVE: "Inactive",
+  },
+  SubTaskStatus: {
+    TODO: "Todo",
+
     ACTIVE: "Active",
     INACTIVE: "Inactive",
   },
