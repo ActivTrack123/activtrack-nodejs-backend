@@ -16,6 +16,7 @@ const transhipmentHubRoutes =require("./features/portData/routes/TranshipmentHub
 const portDataLoadingRoutes =require("./features/portData/routes/PortDataLoading.routes")
 const portDataDischargeRoutes =require("./features/portData/routes/PortDataDischarge.routes")
 const portDataReceiptRoutes =require("./features/portData/routes/PortDataReceipt.routes")
+const dsrRoutes=require("./features/dsr/routes/Dsr.routes")
 require("dotenv").config();
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 
@@ -63,7 +64,7 @@ app.use("/api/v1/transhipmentHub/", transhipmentHubRoutes);
 app.use("/api/v1/portDataLoading/", portDataLoadingRoutes);
 app.use("/api/v1/portDataDischarge/", portDataDischargeRoutes);
 app.use("/api/v1/portDataReceipt/", portDataReceiptRoutes);
-
+app.use("/api/v1/dsr/", dsrRoutes);
 // set port, listen for requests
 const APP_PORT = process.env.APP_PORT;
 app.use(require("express-status-monitor")());
