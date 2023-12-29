@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/c100ec3f-5c68-4e2e-8419-5cf524cd4408/resourceGroups/appsvc_linux_centralus_basic/providers/Microsoft.Web/sites/activtrack",
+  "appService.deploySubpath": "."
+}

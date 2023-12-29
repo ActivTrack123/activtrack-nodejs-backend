@@ -18,33 +18,12 @@ const AppConstants = {
     VERIFIED: "Verified",
     REJECTED: "Rejected",
   },
-  OpportunityStatus: {
-    PENDING: "Pending",
-    VERIFIED: "Verified",
-    REJECTED: "Rejected",
-  },
-  ProjectStatus: {
-    PENDING: "Pending",
-    VERIFIED: "Verified",
-    REJECTED: "Rejected",
-  },
-  QuotStatus: {
-    SENT: "Sent",
-    COMPLETED: "Completed",
-    DRAFT: "Draft",
-  },
-  InvoiceStatus: {
-    PAID: "Paid",
-    PENDING: "Pending",
-    OVERDUE: "Completed",
-    DRAFT: "Draft",
-  },
-  TaskPriority: {
-    LOW: "Low",
-    MEDIUM: "Medium",
-    HIGH: "High",
-  },
   VesselStatus: {
+    ACTIVE: "Active",
+    INACTIVE: "Inactive",
+  },
+  ConsigneeStatus: {
+    // Add a missing closing curly brace here for ConsigneeStatus
     ACTIVE: "Active",
     INACTIVE: "Inactive",
   },
@@ -67,7 +46,11 @@ const AppConstants = {
   SubTaskStatus: {
     TODO: "Todo",
     ACTIVE: "Active",
-    DONE: "Done",
+    INACTIVE: "Inactive",
+  },
+  CarrierStatus: {
+    ACTIVE: "Active",
+    INACTIVE: "Inactive",
   },
 };
 

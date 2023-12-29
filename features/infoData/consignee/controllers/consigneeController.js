@@ -1,9 +1,9 @@
-const VesselSchedule = require("../models/VesselScheduleModel");
-const VesselScheduleService = require("../services/VesselScheduleServices");
+const Consignee = require("../models/consigneeModel");
+const consigneeService = require("../services/consigneeServices");
 const { validationResult } = require("express-validator");
 const { default: mongoose } = require("mongoose");
 
-const VesselScheduleController = {
+const consigneeController = {
   async index(request, response, next) {
     const errors = validationResult(request);
 
@@ -29,10 +29,7 @@ const VesselScheduleController = {
       const query = {};
       if (name) {
         const nameRegex = { $regex: new RegExp(name), $options: "i" };
-        query.$or = [
-          { name: nameRegex },
-          { status: nameRegex },
-        ];
+        query.$or = [{ name: nameRegex }, { status: nameRegex }];
       }
 
       if (status) {
@@ -43,10 +40,7 @@ const VesselScheduleController = {
       const sort = {};
 
       // Define the allowed sortBy values
-      const allowedSortValues = [
-        "name",
-        "status",
-      ];
+      const allowedSortValues = ["name", "status"];
 
       if (allowedSortValues.includes(sortBy)) {
         sort[sortBy] = 1; // Can change the sort direction (1 for ascending, -1 for descending)
@@ -55,21 +49,20 @@ const VesselScheduleController = {
         sort.created = -1;
       }
 
-      const vesselSchedules = await VesselSchedule.find(query)
+      const consignees = await Consignee.find(query)
         .sort(sort)
         .limit(parseInt(limit, 10))
         .skip(skip)
         .sort({ created: -1 });
-
-      const total = await VesselSchedule.countDocuments(query);
+      const total = await Consignee.countDocuments(query);
 
       return response.status(200).json({
         error: false,
-        message: "VesselSchedule list retrieved!",
+        message: "Consignee list retrieved!",
         data: {
-          vesselSchedules,
+          consignees,
           total,
-          limit: vesselSchedules.length,
+          limit: consignees.length,
           page: parseInt(page, 10),
         },
       });
@@ -77,92 +70,26 @@ const VesselScheduleController = {
       console.error(error);
       return response.status(400).json({
         error: true,
-        message: "Failed to fetch VesselSchedule list!",
+        message: "Failed to fetch consignee list!",
         data: null,
       });
     }
   },
-
-  async findVesselSchedule(request, response, next) {
-    const errors = validationResult(request);
-  
-    if (!errors.isEmpty()) {
-      return response.status(422).json({
-        error: true,
-        message: "Validation errors",
-        data: errors,
-      });
-    }
-  
-    try {
-      const { por, pol, pod, vessel, voyage, vessel1, voyage1, vessel2, voyage2, route, tsPort } = request.query;
-  
-      let query;
-  
-      if (route === 'DIRECT') {
-        // For direct route
-        query = {
-          portOfReceipt: por,
-          portOfLoading: pol,
-          portOfDischarge: pod,
-          vesselName: vessel,
-          voyage: voyage,
-        };
-      } else {
-        // For connecting route
-        query = {
-          portOfReceipt: por,
-          portOfLoading: pol,
-          portOfDischarge: pod,
-          vesselName: vessel1,
-          voyage: voyage1,
-          connectingVessel: vessel2,
-          voyage2: voyage2,
-          tsPort: tsPort,
-        };
-      }
-  
-      // Your logic to find the vessel schedule based on the provided parameters
-      const foundVesselSchedule = await VesselSchedule.find(query);
-  
-      if (foundVesselSchedule.length > 0) {
-        return response.status(200).json({
-          error: false,
-          message: "VesselSchedule found!",
-          data: foundVesselSchedule,
-        });
-      } else {
-        return response.status(404).json({
-          error: true,
-          message: "No matching VesselSchedule found.",
-          data: null,
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      return response.status(500).json({
-        error: true,
-        message: "Failed to find VesselSchedule.",
-        data: null,
-      });
-    }
-  },
-
 
   async show(request, response, next) {
     try {
-      const vesselSchedule = await VesselSchedule.findById(request.params.id);
+      const consignee = await Consignee.findById(request.params.id);
 
       return response.status(200).json({
         error: false,
-        message: "VesselSchedule retrieved!",
-        data: vesselSchedule,
+        message: "Consignee retrieved!",
+        data: consignee,
       });
     } catch (error) {
       console.error(error);
       return response.status(400).json({
         error: true,
-        message: "Failed to fetch VesselSchedule!",
+        message: "Failed to fetch consignee!",
         data: null,
       });
     }
@@ -182,17 +109,20 @@ const VesselScheduleController = {
     const payload = request.body;
 
     try {
-      const newVesselSchedule = await VesselScheduleService.createVesselSchedule(payload);
-      if (!newVesselSchedule.error) {
+      const newConsignee = await consigneeService.createConsignee(
+        payload,
+        request
+      );
+      if (!newConsignee.error) {
         return response.status(200).json({
           error: false,
-          message: "VesselSchedule created!",
+          message: "Consignee created!",
           data: {},
         });
       } else {
         return response.status(400).json({
           error: true,
-          message: "Failed to create VesselSchedule!",
+          message: "Failed to create consignee!",
           data: null,
         });
       }
@@ -200,7 +130,7 @@ const VesselScheduleController = {
       console.error(error);
       return response.status(400).json({
         error: true,
-        message: "Failed to create VesselSchedule!",
+        message: "Failed to create consignee!",
         data: null,
       });
     }
@@ -220,18 +150,20 @@ const VesselScheduleController = {
     const payload = request.body;
 
     try {
-      const { id } = request.params;
-      const updatedVesselSchedule = await VesselScheduleService.updateVesselSchedule(id, payload);
-      if (!updatedVesselSchedule.error && updatedVesselSchedule !== null) {
+      const Consignee = await consigneeService.updateConsignee(
+        payload,
+        request
+      );
+      if (!Consignee.error && Consignee !== null) {
         return response.status(200).json({
           error: false,
-          message: "VesselSchedule updated!",
+          message: "Consignee updated!",
           data: {},
         });
       } else {
         return response.status(400).json({
           error: true,
-          message: "Failed to update VesselSchedule!",
+          message: "Failed to update consignee!",
           data: null,
         });
       }
@@ -239,7 +171,7 @@ const VesselScheduleController = {
       console.error(error);
       return response.status(400).json({
         error: true,
-        message: "Failed to update VesselSchedule!",
+        message: "Failed to update consignee!",
         data: null,
       });
     }
@@ -247,17 +179,17 @@ const VesselScheduleController = {
 
   async delete(request, response, next) {
     try {
-      const vesselSchedule = await VesselSchedule.findByIdAndDelete(request.params.id);
-      if (vesselSchedule !== null) {
+      const consignee = await Consignee.findByIdAndDelete(request.params.id);
+      if (consignee !== null) {
         return response.status(200).json({
           error: false,
-          message: "VesselSchedule deleted!",
+          message: "Consignee deleted!",
           data: {},
         });
       } else {
         return response.status(200).json({
           error: false,
-          message: "Cannot find VesselSchedule!",
+          message: "Cannot find consignee!",
           data: null,
         });
       }
@@ -265,11 +197,11 @@ const VesselScheduleController = {
       console.error(error);
       return response.status(400).json({
         error: true,
-        message: "Failed to delete VesselSchedule!",
+        message: "Failed to delete consignee!",
         data: null,
       });
     }
   },
 };
 
-module.exports = VesselScheduleController;
+module.exports = consigneeController;
