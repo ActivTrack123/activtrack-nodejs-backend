@@ -21,6 +21,12 @@ router.get('/', [
     query('page').optional().isNumeric(),
     query('limit').optional().isNumeric(),
     query('query').optional().isString(),
+], verifyToken, DSRController.recentDSR);
+
+router.get('/all', [
+    query('page').optional().isNumeric(),
+    query('limit').optional().isNumeric(),
+    query('query').optional().isString(),
 ], verifyToken, DSRController.index);
 
 // Get by ID Method

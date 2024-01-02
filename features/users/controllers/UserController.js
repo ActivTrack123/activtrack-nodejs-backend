@@ -30,7 +30,7 @@ const UserController = {
                 query.$or = [
                     { name: nameRegex },
                     { email: nameRegex },
-                    { phone: nameRegex },
+                    { company: nameRegex },
 
                 ];
             }
@@ -42,6 +42,7 @@ const UserController = {
                 const roleArr = role.split(',');
                 query['role._id'] = { $in: roleArr };
             }
+            console.log(query)
 
             const users = await User.find(query).limit(parseInt(limit, 10)).skip(skip).sort({ created: -1 }).select(['-password']);
             const total = await User.countDocuments(query);

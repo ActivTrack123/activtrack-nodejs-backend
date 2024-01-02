@@ -61,7 +61,7 @@ const DSRController = {
         .skip(skip)
         .sort({ created: -1 });
       const total = await DSR.countDocuments(query);
-      console.log(total)
+      // console.log(total)
       return response.status(200).json({
         error: false,
         message: "DSR list retrieved!",
@@ -77,6 +77,45 @@ const DSRController = {
       return response.status(400).json({
         error: true,
         message: "Failed to fetch DSR list!",
+        data: null,
+      });
+    }
+  },
+
+  async recentDSR(request, response, next) {
+    try {
+      const { page = 1, limit = 10 } = request.query;
+      const twoMonthsAgo = new Date();
+      twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+
+      const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
+
+      const recentDSRs = await DSR.find({
+        created: { $gte: twoMonthsAgo },
+      })
+        .sort({ created: -1 })
+        .limit(parseInt(limit, 10))
+        .skip(skip);
+
+      const total = await DSR.countDocuments({
+        created: { $gte: twoMonthsAgo },
+      });
+
+      return response.status(200).json({
+        error: false,
+        message: "Active DSRs ",
+        data: {
+          dsrs: recentDSRs,
+          total,
+          limit: recentDSRs.length,
+          page: parseInt(page, 10),
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      return response.status(400).json({
+        error: true,
+        message: "Failed to fetch recent DSRs",
         data: null,
       });
     }

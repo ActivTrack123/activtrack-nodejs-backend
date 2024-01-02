@@ -23,7 +23,6 @@ const consigneeController = {
         status,
         sortBy,
       } = request.query;
-
       const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
 
       const query = {};
