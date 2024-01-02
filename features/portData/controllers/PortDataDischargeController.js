@@ -62,7 +62,7 @@ const PortDataDischargeController = {
         .skip(skip)
         .sort({ created: -1 });
       const total = await PortDataDischarge.countDocuments(query);
-      console.log(total)
+      // console.log(total)
       return response.status(200).json({
         error: false,
         message: "PortDataDischarge list retrieved!",

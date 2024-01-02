@@ -74,8 +74,21 @@ const AuthController = {
       roleId,
       jobRole,
       document,
+      company
     } = request.body;
 
+    console.log(name,
+      email,
+      password,
+      phone,
+      dob,
+      address,
+      startDate,
+      note,
+      roleId,
+      jobRole,
+      document,
+      company)
     try {
       const user = await User.findOne({ email: email });
 
@@ -102,6 +115,7 @@ const AuthController = {
         jobRole: jobRole,
         password: bcrypt.hashSync(password, 10),
         accountStatus: AccountStatus.ACTIVE,
+        company
         // documents: {
         //     fileUrl: document,
         // }

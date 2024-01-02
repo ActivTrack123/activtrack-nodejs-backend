@@ -23,7 +23,7 @@ const PortDataReceiptController = {
         status,
         sortBy,
       } = request.query;
-
+      // console.log(page,limit,name,status,sortBy)
       const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
 
       const query = {};

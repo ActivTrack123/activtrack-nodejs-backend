@@ -77,9 +77,9 @@ const UserController = {
                 data: errors,
             });
         }
-
-        const { name, email, password, phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo } = request.body;
-
+        
+        const { name, email, password, phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company } = request.body;
+        console.log( phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company )
         try {
             const user = await User.findOne({ "email": email });
 
@@ -103,6 +103,7 @@ const UserController = {
                 startDate: start_date,
                 note,
                 role,
+                company,
                 jobRole: job_role,
                 password: bcrypt.hashSync(password, 10),
                 accountStatus: AccountStatus.ACTIVE,
@@ -154,7 +155,7 @@ const UserController = {
             });
         }
 
-        const { name, email, password, phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo } = request.body;
+        const { name, email, password, phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company } = request.body;
 
         try {
             const role = await Role.findById(role_id);
@@ -182,6 +183,7 @@ const UserController = {
                 documents: document,
                 role,
                 jobRole: job_role,
+                company,
             }, { new: true });
 
             if (user != null) {
