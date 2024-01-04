@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const DSRService = module.exports;
 
-DSRService.createDSR = async function (payload, request) {
+DSRService.createDSR = async function (payload, request, createdBy) {
     const {
         kam,
         bookingReference,
@@ -102,7 +102,8 @@ DSRService.createDSR = async function (payload, request) {
             legEtd2,
             legAtd2,
             legEta2,
-            legAta2
+            legAta2,
+            createdBy
         });
 
         return newDSR;
@@ -112,7 +113,7 @@ DSRService.createDSR = async function (payload, request) {
     }
 };
 
-DSRService.updateDSR = async function (payload, request) {
+DSRService.updateDSR = async function (payload, request, updatedBy) {
     const {
         kam,
         bookingReference,
@@ -208,7 +209,8 @@ DSRService.updateDSR = async function (payload, request) {
             legEtd2,
             legAtd2,
             legEta2,
-            legAta2
+            legAta2,
+            $push: { updatedBy: updatedBy }
         });
 
         return dsr;

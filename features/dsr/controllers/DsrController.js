@@ -1,3 +1,4 @@
+const SalesPerson = require("../../users/models/SalesPersonModel");
 const DSR = require("../models/DsrModel");
 const DSRService = require("../services/DsrServices");
 const { validationResult } = require("express-validator");
@@ -39,7 +40,7 @@ const DSRController = {
 
       if (consignee) query.consignee = consignee;
       if (salesPerson) query.salesPerson = salesPerson;
-      console.log(query)
+      // console.log(query)
 
       // if (name) {
       //   const nameRegex = { $regex: new RegExp(name), $options: "i" };
@@ -74,7 +75,9 @@ const DSRController = {
         .skip(skip)
         .sort({ created: -1 });
       const total = await DSR.countDocuments(query);
-      console.log(dsrs)
+      const kam= await SalesPerson.find({});
+      const salesPersons = await SalesPerson.countDocuments({});
+      // console.log(dsrs)
       // console.log(total)
       return response.status(200).json({
         error: false,
@@ -82,6 +85,8 @@ const DSRController = {
         data: {
           dsrs,
           total,
+          kam,
+          salesPersons,
           limit: dsrs.length,
           page: parseInt(page, 10),
         },
@@ -98,13 +103,24 @@ const DSRController = {
 
   async recentDSR(request, response, next) {
     try {
-      const { page = 1, limit = 10 } = request.query;
+      const {
+        page = 1,
+        limit = 10,
+        query: name,
+        customer:consignee,
+        salesPerson,
+        dataEntryPerosn
+      } = request.query;
+      console.log(request.user.name)
       const twoMonthsAgo = new Date();
-      twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+      twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 3);
 
       const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
 
       const recentDSRs = await DSR.find({
+        salesPerson:salesPerson,
+        consignee:consignee,
+        createdBy:dataEntryPerosn,
         created: { $gte: twoMonthsAgo },
       })
         .sort({ created: -1 })
@@ -114,6 +130,7 @@ const DSRController = {
       const total = await DSR.countDocuments({
         created: { $gte: twoMonthsAgo },
       });
+
 
       return response.status(200).json({
         error: false,
@@ -155,7 +172,7 @@ const DSRController = {
   },
 
   async create(request, response, next) {
-    console.log("come")
+    // console.log("come")
     const errors = validationResult(request);
 
     if (!errors.isEmpty()) {
@@ -167,9 +184,9 @@ const DSRController = {
     }
 
     const payload = request.body;
-    console.log(payload)
     try {
-      const newDSR = await DSRService.createDSR(payload, request);
+      const createdBy=request.user.name
+      const newDSR = await DSRService.createDSR(payload, request,createdBy);
       if (!newDSR.error) {
         
         return response.status(200).json({
@@ -196,7 +213,7 @@ const DSRController = {
 
   async update(request, response, next) {
     const errors = validationResult(request);
-
+    
     if (!errors.isEmpty()) {
       return response.status(422).json({
         error: true,
@@ -208,7 +225,8 @@ const DSRController = {
     const payload = request.body;
 
     try {
-      const dsr = await DSRService.updateDSR(payload, request);
+      const updatedBy=request.user.name
+      const dsr = await DSRService.updateDSR(payload, request, updatedBy);
       if (!dsr.error && dsr !== null) {
         return response.status(200).json({
           error: false,
