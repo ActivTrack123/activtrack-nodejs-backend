@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const VesselScheduleService = module.exports;
 
-VesselScheduleService.createVesselSchedule = async function (payload) {
+VesselScheduleService.createVesselSchedule = async function (payload,createdBy) {
     const {
         portOfReceipt,
         portOfLoading,
@@ -59,7 +59,8 @@ VesselScheduleService.createVesselSchedule = async function (payload) {
             ata2,
             service,
             carrier,
-            note
+            note,
+            createdBy
         });
 
         return newVesselSchedule;
@@ -69,7 +70,7 @@ VesselScheduleService.createVesselSchedule = async function (payload) {
     }
 };
 
-VesselScheduleService.updateVesselSchedule = async function (id, payload) {
+VesselScheduleService.updateVesselSchedule = async function (id, payload,updatedBy) {
     const {
         portOfReceipt,
         portOfLoading,
@@ -124,7 +125,8 @@ VesselScheduleService.updateVesselSchedule = async function (id, payload) {
             ata2,
             service,
             carrier,
-            note
+            note,
+            $push: { updatedBy: updatedBy }
         });
 
         return updatedVesselSchedule;

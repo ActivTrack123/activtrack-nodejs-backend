@@ -2,6 +2,7 @@ const { AccountStatus } = require("../../config/constants");
 const { validationResult } = require("express-validator");
 
 const User = require("../../features/users/models/UserModel");
+const SalesPerson = require("../../features/users/models/SalesPersonModel");
 const Authentication = require("../services/AuthService");
 const bcrypt = require("bcrypt");
 const Role = require("../../features/users/models/RoleModel");
@@ -99,9 +100,10 @@ const AuthController = {
           data: null,
         });
       }
+      
 
       const role = await Role.findById(roleId);
-
+      
       const newUser = await User({
         _id: new mongoose.Types.ObjectId(),
         name,
@@ -120,6 +122,17 @@ const AuthController = {
         //     fileUrl: document,
         // }
       }).save();
+
+      if(role.name=='Sales person'){
+        const newSalesPerson = await SalesPerson({
+          id: newUser._id,
+          name,
+          company
+          // documents: {
+          //     fileUrl: document,
+          // }
+        }).save();
+      }
 
       Authentication.signToken(newUser, response, next);
     } catch (error) {

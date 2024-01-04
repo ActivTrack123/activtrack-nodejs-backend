@@ -26,7 +26,8 @@ const VesselScheduleSchema = new mongoose.Schema({
     service: { type: String, default: '' },
     carrier: { type: String, default: '' },
     note: { type: String, default: '' },
-});
-
+    createdBy:{type : String , trim: true},
+    updatedBy:{type : String , trim: true}
+})
 module.exports = mongoose.model('VesselSchedule', VesselScheduleSchema);
 

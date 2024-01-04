@@ -48,6 +48,8 @@ const DSRSchema = new mongoose.Schema({
     legEta2: { type: Date },
     legAta2: { type: Date },
     created: { type: Date, default: Date.now },
+    createdBy:{type : String , trim: true},
+    updatedBy:{type : String , trim: true}
 });
 
 module.exports = mongoose.model('DSR', DSRSchema);

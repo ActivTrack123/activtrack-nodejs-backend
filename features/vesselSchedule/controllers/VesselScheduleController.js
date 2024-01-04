@@ -170,7 +170,7 @@ const VesselScheduleController = {
 
   async create(request, response, next) {
     const errors = validationResult(request);
-
+    
     if (!errors.isEmpty()) {
       return response.status(422).json({
         error: true,
@@ -182,7 +182,8 @@ const VesselScheduleController = {
     const payload = request.body;
 
     try {
-      const newVesselSchedule = await VesselScheduleService.createVesselSchedule(payload);
+      const createdBy=request.user.name
+      const newVesselSchedule = await VesselScheduleService.createVesselSchedule(payload, createdBy);
       if (!newVesselSchedule.error) {
         return response.status(200).json({
           error: false,
@@ -220,8 +221,10 @@ const VesselScheduleController = {
     const payload = request.body;
 
     try {
+      
+      const updatedBy=request.user.name
       const { id } = request.params;
-      const updatedVesselSchedule = await VesselScheduleService.updateVesselSchedule(id, payload);
+      const updatedVesselSchedule = await VesselScheduleService.updateVesselSchedule(id, payload, updatedBy);
       if (!updatedVesselSchedule.error && updatedVesselSchedule !== null) {
         return response.status(200).json({
           error: false,
