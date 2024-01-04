@@ -76,6 +76,10 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  company: {
+    type: String,
+    trim: true,
+  },
 });
 
 UserSchema.methods.comparePassword = function (password) {
