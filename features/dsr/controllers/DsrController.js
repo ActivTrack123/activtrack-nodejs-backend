@@ -116,13 +116,16 @@ const DSRController = {
       twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 3);
 
       const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
+      console.log(consignee,salesPerson,dataEntryPerosn)
+      const query = {};
+      
 
-      const recentDSRs = await DSR.find({
-        salesPerson:salesPerson,
-        consignee:consignee,
-        createdBy:dataEntryPerosn,
-        created: { $gte: twoMonthsAgo },
-      })
+      if (consignee) query.consignee = consignee;
+      if (salesPerson) query.salesPerson = salesPerson;
+      query.created = { $gte: twoMonthsAgo };
+      const recentDSRs = await DSR.find(
+        query
+      )
         .sort({ created: -1 })
         .limit(parseInt(limit, 10))
         .skip(skip);
@@ -130,6 +133,7 @@ const DSRController = {
       const total = await DSR.countDocuments({
         created: { $gte: twoMonthsAgo },
       });
+      console.log(recentDSRs )
 
 
       return response.status(200).json({
