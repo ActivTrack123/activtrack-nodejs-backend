@@ -1,12 +1,20 @@
 const mongoose = require('mongoose');
 
+const MerchandiserSchema = new mongoose.Schema({
+    name: { type: String, trim: true },
+    _id: { type: String, trim: true },
+
+    status: { type: String, trim: true, default: 'Active' },
+    created: { type: Date, default: Date.now },
+});
+
 const DSRSchema = new mongoose.Schema({
     _id: mongoose.SchemaTypes.ObjectId,
     kam: { type: String, trim: true },
     bookingReference: { type: String, trim: true },
     shipper: { type: String, trim: true },
     consignee: { type: String, trim: true },
-    merchandiser: { type: String, trim: true },
+    merchandisers: [MerchandiserSchema],//{ type: String, trim: true },
     bookingReceived: { type: Date },
     shipper: { type: String, trim: true },
     pos: { type: String, trim: true },

@@ -76,6 +76,7 @@ const DSRController = {
         .sort({ created: -1 });
       const total = await DSR.countDocuments(query);
       const kam= await SalesPerson.find({});
+
       const salesPersons = await SalesPerson.countDocuments({});
       // console.log(dsrs)
       // console.log(total)
@@ -135,6 +136,7 @@ const DSRController = {
       });
       console.log(recentDSRs )
 
+      const kam= await SalesPerson.find({});
 
       return response.status(200).json({
         error: false,
@@ -142,6 +144,7 @@ const DSRController = {
         data: {
           dsrs: recentDSRs,
           total,
+          kam,
           limit: recentDSRs.length,
           page: parseInt(page, 10),
         },
@@ -188,6 +191,8 @@ const DSRController = {
     }
 
     const payload = request.body;
+    console.log('////////////////////////////////////////////////////////////////////////////////')
+    console.log(payload)
     try {
       const createdBy=request.user.name
       const newDSR = await DSRService.createDSR(payload, request,createdBy);
