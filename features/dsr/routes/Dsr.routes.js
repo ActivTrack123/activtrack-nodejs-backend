@@ -38,4 +38,7 @@ router.put('/:id/update', [], verifyToken, DSRController.update);
 // Delete by ID Method
 router.delete('/:id/delete', verifyToken, DSRController.delete);
 
+// Get Activity Log by ID Method
+router.get('/:id/activitylog', verifyToken, DSRController.activityLog);
+
 module.exports = router;

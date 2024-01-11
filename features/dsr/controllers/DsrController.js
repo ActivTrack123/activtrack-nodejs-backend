@@ -3,6 +3,7 @@ const DSR = require("../models/DsrModel");
 const DSRService = require("../services/DsrServices");
 const { validationResult } = require("express-validator");
 const { default: mongoose } = require("mongoose");
+const ActivityLog = require("../models/ActivityLog");
 
 const DSRController = {
   async index(request, response, next) {
@@ -29,7 +30,7 @@ const DSRController = {
         salesPerson
       } = request.query;
 
-      console.log(startDate, endDate, consignee, salesPerson)
+      // console.log(startDate, endDate, consignee, salesPerson)
 
       const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
 
@@ -117,7 +118,7 @@ const DSRController = {
       twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 3);
 
       const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
-      console.log(consignee,salesPerson,dataEntryPerosn)
+      // console.log(consignee,salesPerson,dataEntryPerosn)
       const query = {};
       
 
@@ -134,7 +135,7 @@ const DSRController = {
       const total = await DSR.countDocuments({
         created: { $gte: twoMonthsAgo },
       });
-      console.log(recentDSRs )
+      // console.log(recentDSRs )
 
       const kam= await SalesPerson.find({});
 
@@ -233,8 +234,24 @@ const DSRController = {
 
     const payload = request.body;
 
+    
+    
     try {
       const updatedBy=request.user.name
+      const changeStream = DSR.watch();
+
+        changeStream.on('change', async (change) => {
+            console.log('DSR Change detected:', change);
+            await ActivityLog.create({
+                changeType: change.operationType,
+                documentId: change.documentKey._id,
+                changeDetails: change.updateDescription || change.fullDocument,
+                timestamp: new Date(),
+                changeBy: updatedBy
+            });
+
+            
+        });
       const dsr = await DSRService.updateDSR(payload, request, updatedBy);
       if (!dsr.error && dsr !== null) {
         return response.status(200).json({
@@ -280,6 +297,25 @@ const DSRController = {
       return response.status(400).json({
         error: true,
         message: "Failed to delete DSR!",
+        data: null,
+      });
+    }
+  },
+
+  async activityLog(request, response, next) {
+    try {
+      const activityLog = await ActivityLog.findById(request.params.id);
+
+      return response.status(200).json({
+        error: false,
+        message: "DSR retrieved!",
+        data: activityLog,
+      });
+    } catch (error) {
+      console.error(error);
+      return response.status(400).json({
+        error: true,
+        message: "Failed to fetch DSR!",
         data: null,
       });
     }
