@@ -27,7 +27,7 @@ const DSRController = {
         startDate,
         endDate,
         consignee,
-        salesPerson
+        salesPerson,
       } = request.query;
 
       // console.log(startDate, endDate, consignee, salesPerson)
@@ -51,17 +51,10 @@ const DSRController = {
       //   ];
       // }
 
-      
-
-      
-
       const sort = {};
 
       // Define the allowed sortBy values
-      const allowedSortValues = [
-        "name",
-        "status",
-      ];
+      const allowedSortValues = ["name", "status"];
 
       if (allowedSortValues.includes(sortBy)) {
         sort[sortBy] = 1; // Can change the sort direction (1 for ascending, -1 for descending)
@@ -76,7 +69,7 @@ const DSRController = {
         .skip(skip)
         .sort({ created: -1 });
       const total = await DSR.countDocuments(query);
-      const kam= await SalesPerson.find({});
+      const kam = await SalesPerson.find({});
 
       const salesPersons = await SalesPerson.countDocuments({});
       // console.log(dsrs)
@@ -109,25 +102,22 @@ const DSRController = {
         page = 1,
         limit = 10,
         query: name,
-        customer:consignee,
+        customer: consignee,
         salesPerson,
-        dataEntryPerosn
+        dataEntryPerosn,
       } = request.query;
-      console.log(request.user.name)
+      console.log(request.user.name);
       const twoMonthsAgo = new Date();
       twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 3);
 
       const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
       // console.log(consignee,salesPerson,dataEntryPerosn)
       const query = {};
-      
 
       if (consignee) query.consignee = consignee;
       if (salesPerson) query.salesPerson = salesPerson;
       query.created = { $gte: twoMonthsAgo };
-      const recentDSRs = await DSR.find(
-        query
-      )
+      const recentDSRs = await DSR.find(query)
         .sort({ created: -1 })
         .limit(parseInt(limit, 10))
         .skip(skip);
@@ -137,7 +127,48 @@ const DSRController = {
       });
       // console.log(recentDSRs )
 
-      const kam= await SalesPerson.find({});
+      const kam = await SalesPerson.find({});
+
+      // Run the query
+      const percentageResult = await DSR.aggregate([
+        // Unwind the document into an array of key-value pairs
+        { $project: { data: { $objectToArray: "$$ROOT" } } },
+        // Group by the document id and calculate the total number of fields and the number of fields with values
+        {
+          $group: {
+            _id: "$_id",
+            total: { $sum: { $size: "$data" } },
+            withValues: {
+              $sum: {
+                $size: {
+                  $filter: {
+                    input: "$data",
+                    as: "item",
+                    cond: { $ne: ["$$item.v", null] },
+                  },
+                },
+              },
+            },
+          },
+        },
+        // Project the percentage of fields with values
+        {
+          $project: {
+            percentage: {
+              $multiply: [{ $divide: ["$withValues", "$total"] }, 100],
+            },
+          },
+        },
+      ])
+        // .then((result) => {
+        //   // Do something with the result
+        //   console.log(result);
+        // })
+        // .catch((error) => {
+        //   // Handle the error
+        //   console.error(error);
+        // });
+        const percentage = percentageResult.length > 0 ? percentageResult[0].percentage : 0;
 
       return response.status(200).json({
         error: false,
@@ -148,6 +179,7 @@ const DSRController = {
           kam,
           limit: recentDSRs.length,
           page: parseInt(page, 10),
+          percentage
         },
       });
     } catch (error) {
@@ -192,13 +224,14 @@ const DSRController = {
     }
 
     const payload = request.body;
-    console.log('////////////////////////////////////////////////////////////////////////////////')
-    console.log(payload)
+    console.log(
+      "////////////////////////////////////////////////////////////////////////////////"
+    );
+    console.log(payload);
     try {
-      const createdBy=request.user.name
-      const newDSR = await DSRService.createDSR(payload, request,createdBy);
+      const createdBy = request.user.name;
+      const newDSR = await DSRService.createDSR(payload, request, createdBy);
       if (!newDSR.error) {
-        
         return response.status(200).json({
           error: false,
           message: "DSR created!",
@@ -223,7 +256,7 @@ const DSRController = {
 
   async update(request, response, next) {
     const errors = validationResult(request);
-    
+
     if (!errors.isEmpty()) {
       return response.status(422).json({
         error: true,
@@ -234,24 +267,20 @@ const DSRController = {
 
     const payload = request.body;
 
-    
-    
     try {
-      const updatedBy=request.user.name
+      const updatedBy = request.user.name;
       const changeStream = DSR.watch();
 
-        changeStream.on('change', async (change) => {
-            console.log('DSR Change detected:', change);
-            await ActivityLog.create({
-                changeType: change.operationType,
-                documentId: change.documentKey._id,
-                changeDetails: change.updateDescription || change.fullDocument,
-                timestamp: new Date(),
-                changeBy: updatedBy
-            });
-
-            
+      changeStream.on("change", async (change) => {
+        console.log("DSR Change detected:", change);
+        await ActivityLog.create({
+          changeType: change.operationType,
+          documentId: change.documentKey._id,
+          changeDetails: change.updateDescription || change.fullDocument,
+          timestamp: new Date(),
+          changeBy: updatedBy,
         });
+      });
       const dsr = await DSRService.updateDSR(payload, request, updatedBy);
       if (!dsr.error && dsr !== null) {
         return response.status(200).json({
@@ -304,12 +333,16 @@ const DSRController = {
 
   async activityLog(request, response, next) {
     try {
-      const activityLog = await ActivityLog.findById(request.params.id);
+      const dsrActivityLogs = await ActivityLog.find({
+        documentId: request.params.id,
+      });
 
       return response.status(200).json({
         error: false,
         message: "DSR retrieved!",
-        data: activityLog,
+        data: {
+          dsrActivityLogs,
+        },
       });
     } catch (error) {
       console.error(error);
