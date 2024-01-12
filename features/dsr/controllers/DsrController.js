@@ -28,6 +28,7 @@ const DSRController = {
         endDate,
         consignee,
         salesPerson,
+        createdBy
       } = request.query;
 
       // console.log(startDate, endDate, consignee, salesPerson)
@@ -38,7 +39,8 @@ const DSRController = {
       if (startDate && endDate) {
         query.created = { $gte: new Date(startDate), $lt: new Date(endDate) };
       }
-
+      
+      if (createdBy) query.createdBy = createdBy;
       if (consignee) query.consignee = consignee;
       if (salesPerson) query.salesPerson = salesPerson;
       // console.log(query)
@@ -104,7 +106,7 @@ const DSRController = {
         query: name,
         customer: consignee,
         salesPerson,
-        dataEntryPerosn,
+        createdBy
       } = request.query;
       console.log(request.user.name);
       const twoMonthsAgo = new Date();
@@ -113,7 +115,7 @@ const DSRController = {
       const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
       // console.log(consignee,salesPerson,dataEntryPerosn)
       const query = {};
-
+      if (createdBy) query.createdBy = createdBy;
       if (consignee) query.consignee = consignee;
       if (salesPerson) query.salesPerson = salesPerson;
       query.created = { $gte: twoMonthsAgo };
@@ -335,7 +337,7 @@ const DSRController = {
     try {
       const dsrActivityLogs = await ActivityLog.find({
         documentId: request.params.id,
-      });
+      }).sort({ timestamp: -1 });
 
       return response.status(200).json({
         error: false,
