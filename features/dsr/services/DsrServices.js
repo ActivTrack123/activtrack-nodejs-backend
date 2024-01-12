@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const DSRService = module.exports;
 
 DSRService.createDSR = async function (payload, request, createdBy) {
+    const percentage = calculatePercentage(payload);
+
     const {
         kam,
         bookingReference,
@@ -103,7 +105,8 @@ DSRService.createDSR = async function (payload, request, createdBy) {
             legAtd2,
             legEta2,
             legAta2,
-            createdBy
+            createdBy,
+            percentage,
         });
 
         return newDSR;
@@ -114,6 +117,7 @@ DSRService.createDSR = async function (payload, request, createdBy) {
 };
 
 DSRService.updateDSR = async function (payload, request, updatedBy) {
+    const percentage = calculatePercentage(payload);
     const {
         kam,
         bookingReference,
@@ -210,7 +214,8 @@ DSRService.updateDSR = async function (payload, request, updatedBy) {
             legAtd2,
             legEta2,
             legAta2,
-            $push: { updatedBy: updatedBy }
+            $push: { updatedBy: updatedBy },
+            percentage,
         });
 
         return dsr;
@@ -218,3 +223,10 @@ DSRService.updateDSR = async function (payload, request, updatedBy) {
         return { error: err };
     }
 };
+
+const calculatePercentage = (payload) => {
+    const totalFields = Object.keys(payload).length;
+    const filledFields = Object.values(payload).filter(value => value !== null && value !== '').length;
+  
+    return (filledFields / totalFields) * 100;
+  };
