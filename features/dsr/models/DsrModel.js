@@ -57,7 +57,9 @@ const DSRSchema = new mongoose.Schema({
     legAta2: { type: Date },
     created: { type: Date, default: Date.now },
     createdBy:{type : String , trim: true},
-    updatedBy:{type : String , trim: true}
+    updatedBy:[
+        {type : String , trim: true}
+    ]
 });
 
 
