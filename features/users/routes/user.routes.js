@@ -84,12 +84,16 @@ router.get('/role/', verifyToken, RoleController.index)
 
 router.post('/role/', [
     check('name').not().isEmpty(),
-    check('permissions').not().isEmpty(),
+    // check('permissions').not().isEmpty(),
 ], verifyToken, RoleController.create);
 
 router.put('/role/:id/update', [
     check('name').not().isEmpty(),
-    check('permissions').not().isEmpty(),
+    // check('permissions').not().isEmpty(),
 ], verifyToken, RoleController.update);
+
+router.delete('/:id/delete', verifyToken, RoleController.delete);
+
+router.get('/:id/role', verifyToken, RoleController.show)
 
 module.exports = router;
