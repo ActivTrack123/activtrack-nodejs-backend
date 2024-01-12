@@ -131,47 +131,6 @@ const DSRController = {
 
       const kam = await SalesPerson.find({});
 
-      // Run the query
-      const percentageResult = await DSR.aggregate([
-        // Unwind the document into an array of key-value pairs
-        { $project: { data: { $objectToArray: "$$ROOT" } } },
-        // Group by the document id and calculate the total number of fields and the number of fields with values
-        {
-          $group: {
-            _id: "$_id",
-            total: { $sum: { $size: "$data" } },
-            withValues: {
-              $sum: {
-                $size: {
-                  $filter: {
-                    input: "$data",
-                    as: "item",
-                    cond: { $ne: ["$$item.v", null] },
-                  },
-                },
-              },
-            },
-          },
-        },
-        // Project the percentage of fields with values
-        {
-          $project: {
-            percentage: {
-              $multiply: [{ $divide: ["$withValues", "$total"] }, 100],
-            },
-          },
-        },
-      ])
-        // .then((result) => {
-        //   // Do something with the result
-        //   console.log(result);
-        // })
-        // .catch((error) => {
-        //   // Handle the error
-        //   console.error(error);
-        // });
-        const percentage = percentageResult.length > 0 ? percentageResult[0].percentage : 0;
-
       return response.status(200).json({
         error: false,
         message: "Active DSRs ",
@@ -181,7 +140,6 @@ const DSRController = {
           kam,
           limit: recentDSRs.length,
           page: parseInt(page, 10),
-          percentage
         },
       });
     } catch (error) {

@@ -59,7 +59,11 @@ const DSRSchema = new mongoose.Schema({
     createdBy:{type : String , trim: true},
     updatedBy:[
         {type : String , trim: true}
-    ]
+    ],
+    percentage: {
+        type: Number,
+        default: 0,
+      },
 });
 
 
