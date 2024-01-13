@@ -68,31 +68,19 @@ const RoleController = {
         }
 
         try {
-            const { name, portData, infoData, Vessel, dsr ,user } = request.body;
+            const { name, permissions } = request.body;
+            // console.log("permission", permissions);
 
             const role = await Role({
                 _id: new mongoose.Types.ObjectId(),
                 name,
-                portData, 
-                infoData, 
-                Vessel, 
-                dsr,
-                user
+                portData:permissions.portdata,
+                infoData:permissions.infodata,
+                Vessel:permissions.vessel,
+                dsr:permissions.dsr,
+                user:permissions.user,
             }).save();
 
-            // permissions.forEach(async (permission) => {
-            //     const rolePermission = await RolePermission({
-            //         _id: new mongoose.Types.ObjectId(),
-            //         permission: permission.id,
-            //         role: role.id,
-            //         create: permission.create,
-            //         read: permission.read,
-            //         delete: permission.delete,
-            //         update: permission.update,
-            //     }).save();
-
-            //     await Role.findByIdAndUpdate(role.id, { $push: { rolePermissions: rolePermission.id } })
-            // });
 
             return response.status(200).json({
                 error: false,
@@ -168,16 +156,16 @@ const RoleController = {
         }
 
         try {
-            const { name, portData, infoData, Vessel, dsr ,user } = request.body;
+            const { name, permissions } = request.body;
 
             const role = await Role.findByIdAndUpdate(request.params.id, 
                 {
                     name: name,
-                    portData: portData,
-                    infoData: infoData,
-                    Vessel: Vessel,
-                    dsr: dsr,
-                    user: user,
+                    portData: permissions.portdata,
+                    infoData: permissions.infodata,
+                    Vessel: permissions.vessel,
+                    dsr: permissions.dsr,
+                    user: permissions.user,
                 },
                 { new: true });
 

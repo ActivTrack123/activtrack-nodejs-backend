@@ -92,7 +92,7 @@ router.put('/role/:id/update', [
     // check('permissions').not().isEmpty(),
 ], verifyToken, RoleController.update);
 
-router.delete('/:id/delete', verifyToken, RoleController.delete);
+router.delete('/:id/deleterole', verifyToken, RoleController.delete);
 
 router.get('/:id/role', verifyToken, RoleController.show)
 
