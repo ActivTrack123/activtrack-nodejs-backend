@@ -44,7 +44,7 @@ const UserController = {
             }
             console.log(query)
 
-            const users = await User.find(query).limit(parseInt(limit, 10)).skip(skip).sort({ created: -1 }).select(['-password']);
+            const users = await User.find(query).limit(parseInt(limit, 10)).skip(skip).sort({ created: -1 }).select(['-password']).populate('role', 'name _id');
             const total = await User.countDocuments(query);
 
             return response.status(200).json({
@@ -77,9 +77,9 @@ const UserController = {
                 data: errors,
             });
         }
-        
-        const { name, email, password, phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company } = request.body;
-        console.log( phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company )
+        // console.log("user new", request.body);
+        const { name, email, password, phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company, employId,status } = request.body;
+        // console.log( phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company )
         try {
             const user = await User.findOne({ "email": email });
 
@@ -109,6 +109,8 @@ const UserController = {
                 accountStatus: AccountStatus.ACTIVE,
                 documents: document,
                 photo,
+                status,
+                employId
             }).save();
 
             return response.status(200).json({
@@ -155,10 +157,12 @@ const UserController = {
             });
         }
 
-        const { name, email, password, phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company } = request.body;
+        // console.log("update user", request.body);
+
+        const { name, email, password, phone, dateOfBirth, address, startDate, note, role, jobRole, document, photo,company, employId,status } = request.body;
 
         try {
-            const role = await Role.findById(role_id);
+            // const role = await Role.findById(role_id);
 
             if (password) {
                 await User.findByIdAndUpdate(request.params.id, {
@@ -178,12 +182,14 @@ const UserController = {
                 phone,
                 dateOfBirth,
                 address,
-                startDate: start_date,
+                startDate,
                 note,
                 documents: document,
                 role,
-                jobRole: job_role,
+                jobRole,
                 company,
+                employId,
+                status
             }, { new: true });
 
             if (user != null) {
