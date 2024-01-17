@@ -70,7 +70,7 @@ const DSRController = {
         .limit(parseInt(limit, 10))
         .skip(skip)
         .sort({ created: -1 });
-      const total = await DSR.countDocuments(query);
+      const total = await DSR.countDocuments();
       const kam = await SalesPerson.find({});
 
       const salesPersons = await SalesPerson.countDocuments({});
@@ -118,6 +118,14 @@ const DSRController = {
       if (createdBy) query.createdBy = createdBy;
       if (consignee) query.consignee = consignee;
       if (salesPerson) query.salesPerson = salesPerson;
+      if (name) {
+        const nameRegex = { $regex: new RegExp(name), $options: "i" };
+        query.$or = [
+          { bookingReference: nameRegex },
+          { status: nameRegex },
+        ];
+      }
+
       query.created = { $gte: twoMonthsAgo };
       const recentDSRs = await DSR.find(query)
         .sort({ created: -1 })
