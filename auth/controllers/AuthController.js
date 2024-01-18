@@ -24,12 +24,20 @@ const AuthController = {
     const { email, password } = request.body;
 
     try {
-      const user = await User.findOne({ email: email });
+      const user = await User.findOne({ email: email }).populate('role', 'name _id portData infoData Vessel dsr user');
 
       if (!user) {
         return response.status(401).json({
           error: true,
           message: "Invalid email or password.",
+          data: null,
+        });
+      }
+
+      if (user.status === 'Inactive') {
+        return response.status(401).json({
+          error: true,
+          message: "User Inactivated.",
           data: null,
         });
       }
@@ -149,7 +157,7 @@ const AuthController = {
     const user = await User.findById(request.user._id)
       .populate({
         path: "role",
-        populate: ["rolePermissions"],
+        populate: ["portData","infoData","Vessel","dsr","user"],
       })
       .select(["-password"]);
 

@@ -44,7 +44,7 @@ const UserController = {
             }
             console.log(query)
 
-            const users = await User.find(query).limit(parseInt(limit, 10)).skip(skip).sort({ created: -1 }).select(['-password']).populate('role', 'name _id');
+            const users = await User.find(query).limit(parseInt(limit, 10)).skip(skip).sort({ created: -1 }).select(['-password']).populate('role', 'name _id portData infoData Vessel dsr user');
             const total = await User.countDocuments(query);
 
             return response.status(200).json({

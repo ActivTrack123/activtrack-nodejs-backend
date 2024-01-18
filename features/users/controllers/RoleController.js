@@ -156,11 +156,15 @@ const RoleController = {
         }
 
         try {
-            const { name, permissions } = request.body;
+            const { 
+                name,
+                status, 
+                permissions } = request.body;
 
             const role = await Role.findByIdAndUpdate(request.params.id, 
                 {
                     name: name,
+                    status: status,
                     portData: permissions.portdata,
                     infoData: permissions.infodata,
                     Vessel: permissions.vessel,

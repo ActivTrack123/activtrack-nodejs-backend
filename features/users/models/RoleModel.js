@@ -12,6 +12,11 @@ const RoleSchema = new Schema({
         trim: true,
         required: true,
     },
+    status: {
+        type: Boolean,
+        required: true,
+        default: true,
+    },
     portData: {
         view: {
             type: Boolean,
