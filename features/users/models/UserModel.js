@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const Document = require("./DocumentModel").schema;
 const Role = require("./RoleModel").schema;
-
+const { UserStatus } = require('../../../config/constants');
 const Schema = mongoose.Schema;
 
 /**
@@ -14,6 +14,10 @@ const UserSchema = new Schema({
     type: String,
     trim: true,
     required: true,
+  },
+  employId: {
+    type: String,
+    trim: true,
   },
   email: {
     type: String,
@@ -58,6 +62,11 @@ const UserSchema = new Schema({
     trim: true,
     required: true,
   },
+  status: {
+    type: String,
+    required: true,
+    default: UserStatus.ACTIVE
+},
   accountStatus: {
     type: Number,
     // required: true,

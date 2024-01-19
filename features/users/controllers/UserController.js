@@ -78,7 +78,7 @@ const UserController = {
             });
         }
         
-        const { name, email, password, phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company } = request.body;
+        const { name, email, password, phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company, status , employId} = request.body;
         console.log( phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company )
         try {
             const user = await User.findOne({ "email": email });
@@ -108,7 +108,9 @@ const UserController = {
                 password: bcrypt.hashSync(password, 10),
                 accountStatus: AccountStatus.ACTIVE,
                 documents: document,
-                photo,
+                photo, 
+                status,
+                employId
             }).save();
 
             return response.status(200).json({
@@ -145,6 +147,7 @@ const UserController = {
     },
 
     async update(request, response, next) {
+        console.log("request came")
         const errors = validationResult(request);
 
         if (!errors.isEmpty()) {
@@ -155,7 +158,7 @@ const UserController = {
             });
         }
 
-        const { name, email, password, phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company } = request.body;
+        const { name, email, password, phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company,employId, status } = request.body;
 
         try {
             const role = await Role.findById(role_id);
@@ -184,6 +187,8 @@ const UserController = {
                 role,
                 jobRole: job_role,
                 company,
+                employId,
+                status
             }, { new: true });
 
             if (user != null) {
