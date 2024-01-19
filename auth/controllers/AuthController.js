@@ -24,7 +24,7 @@ const AuthController = {
     const { email, password } = request.body;
 
     try {
-      const user = await User.findOne({ email: email }).populate('role', 'name _id portData infoData Vessel dsr user');
+      const user = await User.findOne({ email: email }).populate('role', 'name _id status portData infoData Vessel dsr user');
 
       if (!user) {
         return response.status(401).json({
