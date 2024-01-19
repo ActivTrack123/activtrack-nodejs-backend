@@ -68,12 +68,13 @@ const RoleController = {
         }
 
         try {
-            const { name, permissions } = request.body;
+            const { name,status, permissions } = request.body;
             // console.log("permission", permissions);
 
             const role = await Role({
                 _id: new mongoose.Types.ObjectId(),
                 name,
+                status,
                 portData:permissions.portdata,
                 infoData:permissions.infodata,
                 Vessel:permissions.vessel,
@@ -156,11 +157,15 @@ const RoleController = {
         }
 
         try {
-            const { name, permissions } = request.body;
+            const { 
+                name,
+                status, 
+                permissions } = request.body;
 
             const role = await Role.findByIdAndUpdate(request.params.id, 
                 {
                     name: name,
+                    status: status,
                     portData: permissions.portdata,
                     infoData: permissions.infodata,
                     Vessel: permissions.vessel,

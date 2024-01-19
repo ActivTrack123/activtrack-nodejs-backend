@@ -36,6 +36,12 @@ const UserSchema = new Schema({
     required: true,
     unique: true,
   },
+  employId: {
+    type: String,
+    trim: true,
+    required: true,
+    unique: true,
+  },
   dateOfBirth: {
     type: Date,
     trim: true,
@@ -56,7 +62,8 @@ const UserSchema = new Schema({
     trim: true,
     required: false,
   },
-  role: Role,
+  // role: Role,
+  role: { type: mongoose.Types.ObjectId, ref: "Role"},
   jobRole: {
     type: String,
     trim: true,
@@ -69,6 +76,10 @@ const UserSchema = new Schema({
 },
   accountStatus: {
     type: Number,
+    // required: true,
+  },
+  status: {
+    type: String,
     // required: true,
   },
   // documents: {
