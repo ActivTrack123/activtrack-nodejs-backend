@@ -52,6 +52,10 @@ const AppConstants = {
     ACTIVE: "Active",
     INACTIVE: "Inactive",
   },
+  UserStatus: {
+    ACTIVE: "Active",
+    INACTIVE: "Inactive",
+  },
 };
 
 module.exports = AppConstants;
