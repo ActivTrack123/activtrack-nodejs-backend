@@ -39,7 +39,7 @@ const UserSchema = new Schema({
   employId: {
     type: String,
     trim: true,
-    required: true,
+    // required: true,
     unique: true,
   },
   dateOfBirth: {
