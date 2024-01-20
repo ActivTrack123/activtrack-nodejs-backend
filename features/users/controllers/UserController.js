@@ -80,6 +80,7 @@ const UserController = {
         // console.log("user new", request.body);
         const { name, email, password, phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company, employId,status } = request.body;
         // console.log( phone, dateOfBirth, address, start_date, note, role_id, job_role, document, photo,company )
+
         try {
             const user = await User.findOne({ "email": email });
 
@@ -147,6 +148,7 @@ const UserController = {
     },
 
     async update(request, response, next) {
+        console.log("request came")
         const errors = validationResult(request);
 
         if (!errors.isEmpty()) {
@@ -156,10 +158,11 @@ const UserController = {
                 data: errors,
             });
         }
-
+      
         // console.log("update user", request.body);
 
         const { name, email, password, phone, dateOfBirth, address, startDate, note, role, jobRole, document, photo,company, employId,status } = request.body;
+
 
         try {
             // const role = await Role.findById(role_id);
