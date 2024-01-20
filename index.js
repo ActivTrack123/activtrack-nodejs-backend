@@ -13,6 +13,8 @@ const customerRoutes = require("./features/customers/routes/customer.routes");
 const contactRoutes = require("./features/contacts/routes/contacts.routes");
 
 const vesselRoutes = require("./features/portData/routes/Vessel.routes");
+const airlineRoutes = require("./features/portData/routes/Airline.routes");
+const airportRoutes = require("./features/portData/routes/Airport.routes");
 const consigneeRoutes = require("./features/infoData/consignee/routes/consignee.routes");
 const carrierRoutes = require("./features/infoData/carriers/routes/carrier.routes");
 const shipperRoutes = require("./features/infoData/shipper/routes/shipper.routes");
@@ -73,6 +75,8 @@ app.use("/api/v1/account/", accountRoutes);
 app.use("/api/v1/customer/", customerRoutes);
 app.use("/api/v1/contact/", contactRoutes);
 app.use("/api/v1/vessel/", vesselRoutes);
+app.use("/api/v1/airline/", airlineRoutes);
+app.use("/api/v1/airport/", airportRoutes);
 
 app.use("/api/v1/consignee/", consigneeRoutes);
 app.use("/api/v1/carrier/", carrierRoutes);

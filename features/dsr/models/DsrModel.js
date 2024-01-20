@@ -14,7 +14,7 @@ const DSRSchema = new mongoose.Schema({
     bookingReference: { type: String, trim: true },
     shipper: { type: String, trim: true },
     consignee: { type: String, trim: true },
-    merchandisers: [MerchandiserSchema],//{ type: String, trim: true },
+    merchandisers: { type: [MerchandiserSchema], default: [] },//{ type: String, trim: true },
     bookingReceived: { type: Date },
     shipper: { type: String, trim: true },
     pos: { type: String, trim: true },
