@@ -209,7 +209,7 @@ const VesselScheduleController = {
 
   async update(request, response, next) {
     const errors = validationResult(request);
-
+    console.log(request)
     if (!errors.isEmpty()) {
       return response.status(422).json({
         error: true,
