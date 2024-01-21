@@ -84,10 +84,12 @@ const AuthController = {
       jobRole,
       document,
       company,
+      employId,
       status
     } = request.body;
 
-    console.log(name,
+    console.log(
+      name,
       email,
       password,
       phone,
@@ -112,7 +114,6 @@ const AuthController = {
         });
       }
       
-
       const role = await Role.findById(roleId);
       
       const newUser = await User({
@@ -125,12 +126,12 @@ const AuthController = {
         startDate,
         note,
         role,
-        employId,
         jobRole: jobRole,
         password: bcrypt.hashSync(password, 10),
         accountStatus: AccountStatus.ACTIVE,
-        company
- ,       status
+        company,
+        employId,
+        status
         // documents: {
         //     fileUrl: document,
         // }
@@ -146,6 +147,8 @@ const AuthController = {
           // }
         }).save();
       }
+
+      console.log("new user", newUser);
 
       Authentication.signToken(newUser, response, next);
     } catch (error) {
