@@ -15,10 +15,6 @@ const UserSchema = new Schema({
     trim: true,
     required: true,
   },
-  employId: {
-    type: String,
-    trim: true,
-  },
   email: {
     type: String,
     trim: true,
@@ -33,29 +29,28 @@ const UserSchema = new Schema({
   phone: {
     type: String,
     trim: true,
-    required: true,
-    unique: true,
+    required: false,
   },
   employId: {
     type: String,
     trim: true,
     // required: true,
-    unique: true,
+    // unique: true,
   },
   dateOfBirth: {
     type: Date,
     trim: true,
-    required: true,
+    required: false,
   },
   address: {
     type: String,
     trim: true,
-    required: true,
+    required: false,
   },
   startDate: {
     type: Date,
     trim: true,
-    required: true,
+    required: false,
   },
   note: {
     type: String,
@@ -67,7 +62,7 @@ const UserSchema = new Schema({
   jobRole: {
     type: String,
     trim: true,
-    required: true,
+    required: false,
   },
   status: {
     type: String,
