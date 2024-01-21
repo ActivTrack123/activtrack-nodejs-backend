@@ -52,15 +52,15 @@ router.get('/:id/show', verifyToken, UserController.show)
 router.put('/:id/update', [
     check('name').not().isEmpty(),
     check('email').not().isEmpty(),
-    check('phone').not().isEmpty(),
-    check('dob').not().isEmpty(),
-    check('address').not().isEmpty(),
-    check('startDate').not().isEmpty(),
-    check('note').not().isEmpty(),
-    check('role').not().isEmpty(),
-    check('jobRole').not().isEmpty(),
-    validateURLDomain('document').withMessage('Invalid image URL'),
-    validateURLDomain('photo').withMessage('Invalid image URL'),
+    // check('phone').not().isEmpty(),
+    // check('dob').not().isEmpty(),
+    // check('address').not().isEmpty(),
+    // check('startDate').not().isEmpty(),
+    // check('note').not().isEmpty(),
+    // check('role').not().isEmpty(),
+    // check('jobRole').not().isEmpty(),
+    // validateURLDomain('document').withMessage('Invalid image URL'),
+    // validateURLDomain('photo').withMessage('Invalid image URL'),
 ], verifyToken, UserController.update)
 
 //Delete by ID Method

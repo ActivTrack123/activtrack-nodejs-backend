@@ -150,7 +150,7 @@ const UserController = {
     async update(request, response, next) {
         console.log("request came")
         const errors = validationResult(request);
-
+        console.log(errors)
         if (!errors.isEmpty()) {
             return response.status(422).json({
                 error: true,
