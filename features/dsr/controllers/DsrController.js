@@ -36,13 +36,16 @@ const DSRController = {
       const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
 
       const query = {};
+
       if (startDate && endDate) {
         query.created = { $gte: new Date(startDate), $lt: new Date(endDate) };
       }
-      
+
       if (createdBy) query.createdBy = createdBy;
       if (consignee) query.consignee = consignee;
       if (salesPerson) query.salesPerson = salesPerson;
+
+      console.log('all dsr', query, createdBy, startDate, 'start');
       // console.log(query)
 
       // if (name) {
@@ -52,6 +55,8 @@ const DSRController = {
       //     { status: nameRegex },
       //   ];
       // }
+
+      console.log('all dsr',query,createdBy,startDate,'start')
 
       const sort = {};
 
@@ -106,7 +111,7 @@ const DSRController = {
         query: name,
         customer: consignee,
         salesPerson,
-        createdBy
+        createdby:createdBy,
       } = request.query;
       console.log(request.user.name);
       const twoMonthsAgo = new Date();
@@ -135,7 +140,7 @@ const DSRController = {
       const total = await DSR.countDocuments({
         created: { $gte: twoMonthsAgo },
       });
-      // console.log(recentDSRs )
+      console.log('recentDSRs',createdBy )
 
       const kam = await SalesPerson.find({});
 

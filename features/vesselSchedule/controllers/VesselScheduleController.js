@@ -49,7 +49,8 @@ const VesselScheduleController = {
       ];
 
       if (allowedSortValues.includes(sortBy)) {
-        sort[sortBy] = 1; // Can change the sort direction (1 for ascending, -1 for descending)
+        // sort[sortBy] = 1; // Can change the sort direction (1 for ascending, -1 for descending)
+        sort.created = -1;
       } else {
         // Default sorting if sortBy is not provided or is not an allowed value
         sort.created = -1;
