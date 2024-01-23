@@ -43,7 +43,7 @@ const DSRController = {
 
       if (createdBy) query.createdBy = createdBy;
       if (consignee) query.consignee = consignee;
-      if (salesPerson) query.salesPerson = salesPerson;
+      if (salesPerson) query.kam = salesPerson;
 
       console.log('all dsr', query, createdBy, startDate, 'start');
       // console.log(query)
@@ -111,7 +111,7 @@ const DSRController = {
         page = 1,
         limit = 10,
         query: name,
-        customer: consignee,
+        consignee,
         salesPerson,
         createdBy,
       } = request.query;
@@ -125,7 +125,7 @@ const DSRController = {
       const query = {};
       if (createdBy) query.createdBy = createdBy;
       if (consignee) query.consignee = consignee;
-      if (salesPerson) query.salesPerson = salesPerson;
+      if (salesPerson) query.kam = salesPerson;
       // if (name) {
       //   const nameRegex = { $regex: new RegExp(name), $options: "i" };
       //   query.$or = [
