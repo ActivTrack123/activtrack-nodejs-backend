@@ -75,11 +75,13 @@ const DSRController = {
         .limit(parseInt(limit, 10))
         .skip(skip)
         .sort({ created: -1 });
+
+        // console.log(dsrs)
       const total = await DSR.countDocuments();
       const kam = await SalesPerson.find({});
 
       const salesPersons = await SalesPerson.countDocuments({});
-      // console.log(dsrs)
+      console.log(dsrs.length,'result')
       // console.log(total)
       return response.status(200).json({
         error: false,
@@ -111,8 +113,9 @@ const DSRController = {
         query: name,
         customer: consignee,
         salesPerson,
-        createdby:createdBy,
+        createdBy,
       } = request.query;
+
       console.log(request.user.name);
       const twoMonthsAgo = new Date();
       twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 3);
@@ -123,13 +126,13 @@ const DSRController = {
       if (createdBy) query.createdBy = createdBy;
       if (consignee) query.consignee = consignee;
       if (salesPerson) query.salesPerson = salesPerson;
-      if (name) {
-        const nameRegex = { $regex: new RegExp(name), $options: "i" };
-        query.$or = [
-          { bookingReference: nameRegex },
-          { status: nameRegex },
-        ];
-      }
+      // if (name) {
+      //   const nameRegex = { $regex: new RegExp(name), $options: "i" };
+      //   query.$or = [
+      //     { bookingReference: nameRegex },
+      //     { status: nameRegex },
+      //   ];
+      // }
 
       query.created = { $gte: twoMonthsAgo };
       const recentDSRs = await DSR.find(query)

@@ -99,7 +99,7 @@ const VesselScheduleController = {
       const { por, pol, pod, vessel, voyage, vessel1, voyage1, vessel2, voyage2, route, tsPort } = request.query;
   
       let query;
-  
+      console.log(por, pol, pod, vessel, voyage, vessel1, voyage1, vessel2, voyage2, route, tsPort)
       if (route === 'DIRECT') {
         // For direct route
         query = {
