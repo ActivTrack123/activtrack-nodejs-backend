@@ -35,4 +35,7 @@ router.delete('/:id/delete', verifyToken, VesselScheduleController.delete);
 // Get by query Method
 router.get('/find', verifyToken, VesselScheduleController.findVesselSchedule);
 
+// Get by params Method
+router.get('/find-vessel', VesselScheduleController.getVesselShedule);
+
 module.exports = router;

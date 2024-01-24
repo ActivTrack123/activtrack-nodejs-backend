@@ -27,6 +27,9 @@ router.get('/', [
     query('query').optional().isString(),
 ], verifyToken, PortDataDischargeController.index);
 
+// Get all Method
+router.get('/all', PortDataDischargeController.allPortDataDischarge);
+
 // Get by ID Method
 router.get('/:id/show', verifyToken, PortDataDischargeController.show);
 

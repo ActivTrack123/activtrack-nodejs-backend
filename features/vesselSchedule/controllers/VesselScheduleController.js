@@ -149,6 +149,42 @@ const VesselScheduleController = {
     }
   },
 
+  async getVesselShedule(request, response, next) {
+    const errors = validationResult(request);
+  
+    if (!errors.isEmpty()) {
+      return response.status(422).json({
+        error: true,
+        message: "Validation errors",
+        data: errors,
+      });
+    }
+
+    try {
+      const {pol,pod} = request.query;
+      const query = {
+        portOfLoading: pol,
+        portOfDischarge: pod
+      }
+      const foundVesselSchedule = await VesselSchedule.find(query);
+      if (foundVesselSchedule.length > 0) {
+        return response.status(200).json(foundVesselSchedule);
+      } else {
+        return response.status(404).json({
+          error: true,
+          message: "No matching VesselSchedule found.",
+          data: null,
+        });
+      }      
+    } catch (error) {
+      console.error(error);
+      return response.status(500).json({
+        error: true,
+        message: "Failed to find VesselSchedule.",
+        data: null,
+      });
+    }
+  },
 
   async show(request, response, next) {
     try {
