@@ -25,7 +25,10 @@ router.get('/', [
     query('page').optional().isNumeric(),
     query('limit').optional().isNumeric(),
     query('query').optional().isString(),
-], verifyToken, PortDataLoadingController.index);
+], verifyToken,PortDataLoadingController.index);
+
+// Get all Method
+router.get('/all',PortDataLoadingController.allPortDataLoading);
 
 // Get by ID Method
 router.get('/:id/show', verifyToken, PortDataLoadingController.show);

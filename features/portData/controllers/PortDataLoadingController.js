@@ -82,6 +82,40 @@ const PortDataLoadingController = {
     }
   },
 
+  async allPortDataLoading(request,response,next){
+    const errors = validationResult(request);
+
+    if (!errors.isEmpty()) {
+      return response.status(422).json({
+        error: true,
+        message: "Validation errors",
+        data: errors,
+      });
+    }
+
+    try {
+      const portDataLoadings = await PortDataLoading.find();
+      const transformedPortDataLoadings = portDataLoadings.map(item => {
+        return {
+            id: item._id,
+            name: item.name,
+            status: item.status,
+            created_at: item.created,
+        };
+    });
+      return response.status(200).json(transformedPortDataLoadings);
+    } catch (error) {
+      console.error(error);
+        return response.status(400).json({
+            error: true,
+            message: "Failed to fetch PortDataLoading list!",
+            data: null,
+        });
+    }
+
+
+  },
+
   async show(request, response, next) {
     try {
       const portDataLoading = await PortDataLoading.findById(request.params.id);
