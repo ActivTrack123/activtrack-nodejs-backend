@@ -140,11 +140,19 @@ const VesselController = {
       }
     } catch (error) {
       console.error(error);
-      return response.status(400).json({
-        error: true,
-        message: "Failed to create vessel!",
-        data: null,
-      });
+      if (error.message === "Vessel name already in use.") {
+        return response.status(400).json({
+            error: true,
+            message: "Vessel name already in use.",
+            data: null,
+        });
+    } else {
+        return response.status(400).json({
+            error: true,
+            message: "Failed to create PortDataLoading!",
+            data: null,
+        });
+    }
     }
   },
 

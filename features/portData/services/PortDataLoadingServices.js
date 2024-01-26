@@ -5,6 +5,10 @@ const PortDataLoadingService = module.exports;
 
 PortDataLoadingService.createPortDataLoading = async function (payload, request) {
     const { name,  status } = payload;
+    const portLoading = await PortDataLoading.findOne({name:name});
+    if (portLoading) {
+        throw new Error("Port name already in use.");
+      }
     try {
         const newPortDataLoading = await PortDataLoading.create({
             _id: new mongoose.Types.ObjectId(),

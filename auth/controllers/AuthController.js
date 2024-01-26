@@ -113,6 +113,26 @@ const AuthController = {
           data: null,
         });
       }
+
+      const userphone = await User.findOne({ phone: phone });
+
+      if (userphone) {
+        return response.status(400).json({
+          error: true,
+          message: "Phone number already using.",
+          data: null,
+        });
+      }
+
+      const empId = await User.findOne({ employId: employId });
+
+      if (empId) {
+        return response.status(400).json({
+          error: true,
+          message: "Employee ID shold be uniqe.",
+          data: null,
+        });
+      }
       
       const role = await Role.findById(roleId);
       

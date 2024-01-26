@@ -11,9 +11,12 @@ const infoDataController = {
   async index(request, response, next) {
     try {
       const getModelNames = async (model) => {
-        return (await model.find({}, { name: 1, _id: 0 })).map(
-          (item) => item.name
-        );
+        return (await model.find({}, { name: 1, status: 1, _id: 0 })).map(
+          (item) => ({ name: item.name, status: item.status })
+      );
+        // return (await model.find({}, { name: 1, _id: 0 })).map(
+        //   (item) => item.name
+        // );
       };
 
       const carriers = await getModelNames(carrierModel);
