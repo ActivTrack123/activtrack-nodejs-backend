@@ -132,7 +132,9 @@ const VesselScheduleController = {
           message: "VesselSchedule found!",
           data: foundVesselSchedule,
         });
-      } else {
+
+      } 
+      else {
         return response.status(404).json({
           error: true,
           message: "No matching VesselSchedule found.",

@@ -11,6 +11,7 @@ const AirlineSchema = new Schema({
     type: String,
     trim: true,
     required: true,
+    unique: true
   },
 
   status: {

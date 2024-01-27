@@ -48,6 +48,7 @@ const DSRSchema = new mongoose.Schema({
     legAtd1: { type: Date },
     legEta1: { type: Date },
     legAta1: { type: Date },
+    transhipmentPorts:{type: String},
     cfs2: { type: Date },
     voyage2: { type: String, trim: true },
     vessel2: { type: String, trim: true },
