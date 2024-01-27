@@ -5,6 +5,10 @@ const PortDataReceiptService = module.exports;
 
 PortDataReceiptService.createPortDataReceipt = async function (payload, request) {
     const { name,  status } = payload;
+    const portReceipt = await PortDataReceipt.findOne({name:name});
+    if (portReceipt) {
+        throw new Error("Port name already in use.");
+      }
     try {
         const newPortDataReceipt = await PortDataReceipt.create({
             _id: new mongoose.Types.ObjectId(),

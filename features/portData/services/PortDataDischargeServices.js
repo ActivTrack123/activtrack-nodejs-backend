@@ -5,6 +5,10 @@ const PortDataDischargeService = module.exports;
 
 PortDataDischargeService.createPortDataDischarge = async function (payload, request) {
     const { name,  status } = payload;
+    const portDischarge = await PortDataDischarge.findOne({name:name});
+    if (portDischarge) {
+        throw new Error("Port name already in use.");
+      }
     try {
         const newPortDataDischarge = await PortDataDischarge.create({
             _id: new mongoose.Types.ObjectId(),

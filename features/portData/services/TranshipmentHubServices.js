@@ -5,6 +5,10 @@ const TranshipmentHubService = module.exports;
 
 TranshipmentHubService.createTranshipmentHub = async function (payload, request) {
     const { name,  status } = payload;
+    const transhipmenthub = await TranshipmentHub.findOne({name:name});
+    if (transhipmenthub) {
+        throw new Error("Transhipment hub name already in use.");
+      }
     try {
         const newTranshipmentHub = await TranshipmentHub.create({
             _id: new mongoose.Types.ObjectId(),

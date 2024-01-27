@@ -5,6 +5,10 @@ const VesselService = module.exports;
 
 VesselService.createVessel = async function (payload, request) {
     const { name, lat, lng, action, status } = payload;
+    const vesselname = await Vessel.findOne({name:name});
+    if (vesselname) {
+        throw new Error("Vessel name already in use.");
+      }
     try {
         const newVessel = await Vessel.create({
             _id: new mongoose.Types.ObjectId(),
