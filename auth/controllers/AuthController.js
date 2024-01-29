@@ -124,7 +124,10 @@ const AuthController = {
         });
       }
 
-      const empId = await User.findOne({ employId: employId });
+      const role = await Role.findById(roleId);
+
+      if(role.name !== 'Customer'){
+        const empId = await User.findOne({ employId: employId });
 
       if (empId) {
         return response.status(400).json({
@@ -133,8 +136,8 @@ const AuthController = {
           data: null,
         });
       }
-      
-      const role = await Role.findById(roleId);
+      }
+
       
       const newUser = await User({
         _id: new mongoose.Types.ObjectId(),
