@@ -26,6 +26,9 @@ router.get('/', [
 // Get by ID Method
 router.get('/:id/show', verifyToken, VesselScheduleController.show);
 
+// Get by ID Method
+router.get('/:id/vesselschedule', VesselScheduleController.getVesselSheduleId);
+
 // Update by ID Method
 router.put('/:id/update', [], verifyToken, VesselScheduleController.update);
 
