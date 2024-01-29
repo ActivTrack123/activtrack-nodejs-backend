@@ -40,24 +40,24 @@ const VesselScheduleController = {
         query.status = { $in: statusArr };
       }
 
-      const sort = {};
+      // const sort = {};
 
-      // Define the allowed sortBy values
-      const allowedSortValues = [
-        "name",
-        "status",
-      ];
+      // // Define the allowed sortBy values
+      // const allowedSortValues = [
+      //   "portOfReceipt",
+      //   // "status",
+      // ];
 
-      if (allowedSortValues.includes(sortBy)) {
-        // sort[sortBy] = 1; // Can change the sort direction (1 for ascending, -1 for descending)
-        sort.created = -1;
-      } else {
-        // Default sorting if sortBy is not provided or is not an allowed value
-        sort.created = -1;
-      }
+      // if (allowedSortValues.includes(sortBy)) {
+      //   // sort[sortBy] = 1; // Can change the sort direction (1 for ascending, -1 for descending)
+      //   sort.created = -1;
+      // } else {
+      //   // Default sorting if sortBy is not provided or is not an allowed value
+      //   sort.created = -1;
+      // }
 
       const vesselSchedules = await VesselSchedule.find(query)
-        .sort(sort)
+        // .sort(sort)
         .limit(parseInt(limit, 10))
         .skip(skip)
         .sort({ created: -1 });
