@@ -132,7 +132,9 @@ const VesselScheduleController = {
           message: "VesselSchedule found!",
           data: foundVesselSchedule,
         });
-      } else {
+
+      } 
+      else {
         return response.status(404).json({
           error: true,
           message: "No matching VesselSchedule found.",
@@ -166,7 +168,14 @@ const VesselScheduleController = {
         portOfLoading: pol,
         portOfDischarge: pod
       }
-      const foundVesselSchedule = await VesselSchedule.find(query);
+      var foundVesselSchedule=[]
+      if (pod=='All' && pod=='All'){
+         foundVesselSchedule = await VesselSchedule.find({});
+      }
+      else{
+        foundVesselSchedule = await VesselSchedule.find(query);
+      }
+      console.log("req came",pol,pod)
       if (foundVesselSchedule.length > 0) {
         return response.status(200).json(foundVesselSchedule);
       } else {
@@ -181,6 +190,21 @@ const VesselScheduleController = {
       return response.status(500).json({
         error: true,
         message: "Failed to find VesselSchedule.",
+        data: null,
+      });
+    }
+  },
+
+  async getVesselSheduleId(request, response, next) {
+    try {
+      const vesselSchedule = await VesselSchedule.findById(request.params.id);
+      console.log("vessel schedule by id ", request.params.id)
+      return response.status(200).json(vesselSchedule);
+    } catch (error) {
+      console.error(error);
+      return response.status(400).json({
+        error: true,
+        message: "Failed to fetch VesselSchedule!",
         data: null,
       });
     }
