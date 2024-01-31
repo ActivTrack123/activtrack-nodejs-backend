@@ -22,6 +22,7 @@ const PortDataReceiptController = {
         query: name,
         status,
         sortBy,
+        filter
       } = request.query;
       // console.log(page,limit,name,status,sortBy)
       const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
@@ -40,21 +41,40 @@ const PortDataReceiptController = {
         query.status = { $in: statusArr };
       }
 
+      if (filter && ['Active', 'Inactive'].includes(filter)) {
+        query.status = filter === 'Active' ? 'Active' : 'Inactive';
+      }
+
       const sort = {};
 
-      // Define the allowed sortBy values
-      const allowedSortValues = [
-        "name",
-        "status",
-      
-      ];
-
-      if (allowedSortValues.includes(sortBy)) {
-        sort[sortBy] = 1; // Can change the sort direction (1 for ascending, -1 for descending)
+      if (filter) {
+        sort.name = 1; // Sort alphabetically by name
       } else {
-        // Default sorting if sortBy is not provided or is not an allowed value
-        sort.created = -1;
+        const allowedSortValues = [
+          "name",
+          "status",
+        ];
+
+        if (allowedSortValues.includes(sortBy)) {
+          sort[sortBy] = 1;
+        } else {
+          sort.created = -1;
+        }
       }
+
+      // Define the allowed sortBy values
+      // const allowedSortValues = [
+      //   "name",
+      //   "status",
+      
+      // ];
+
+      // if (allowedSortValues.includes(sortBy)) {
+      //   sort[sortBy] = 1; // Can change the sort direction (1 for ascending, -1 for descending)
+      // } else {
+      //   // Default sorting if sortBy is not provided or is not an allowed value
+      //   sort.created = -1;
+      // }
 
       const portDataReceipts = await PortDataReceipt.find(query)
         .sort(sort)
