@@ -169,10 +169,13 @@ const VesselScheduleController = {
         portOfDischarge: pod
       }
       var foundVesselSchedule=[]
-      if (pod=='All' && pod=='All'){
+      if (pol=='All' && pod=='All'){
          foundVesselSchedule = await VesselSchedule.find({});
-      }
-      else{
+      } else if(pol=='All'){
+        foundVesselSchedule = await VesselSchedule.find({portOfDischarge: pod});
+      } else if(pod=='All'){
+        foundVesselSchedule = await VesselSchedule.find({portOfLoading: pol});
+      } else{
         foundVesselSchedule = await VesselSchedule.find(query);
       }
       console.log("req came",pol,pod)
