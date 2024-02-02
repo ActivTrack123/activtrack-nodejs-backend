@@ -179,15 +179,8 @@ const VesselScheduleController = {
         foundVesselSchedule = await VesselSchedule.find(query);
       }
       console.log("req came",pol,pod)
-      if (foundVesselSchedule.length > 0) {
         return response.status(200).json(foundVesselSchedule);
-      } else {
-        return response.status(404).json({
-          error: true,
-          message: "No matching VesselSchedule found.",
-          data: null,
-        });
-      }      
+         
     } catch (error) {
       console.error(error);
       return response.status(500).json({
