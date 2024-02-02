@@ -29,6 +29,8 @@ router.get('/:id/show', verifyToken, VesselScheduleController.show);
 // Get by ID Method
 router.get('/:id/vesselschedule', VesselScheduleController.getVesselSheduleId);
 
+
+
 // Update by ID Method
 router.put('/:id/update', [], verifyToken, VesselScheduleController.update);
 
@@ -39,6 +41,6 @@ router.delete('/:id/delete', verifyToken, VesselScheduleController.delete);
 router.get('/find', verifyToken, VesselScheduleController.findVesselSchedule);
 
 // Get by params Method
-router.get('/find-vessel', verifyToken, VesselScheduleController.getVesselShedule);
+router.get('/find-vessel', VesselScheduleController.getVesselShedule);
 
 module.exports = router;

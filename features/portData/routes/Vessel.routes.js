@@ -32,6 +32,9 @@ router.get('/', [
 // Get by ID Method
 router.get('/:id/show', verifyToken, VesselController.show);
 
+
+
+
 // Update by ID Method
 router.put('/:id/update', [
     check('name').not().isEmpty(),

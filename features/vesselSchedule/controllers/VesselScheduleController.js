@@ -152,15 +152,15 @@ const VesselScheduleController = {
   },
 
   async getVesselShedule(request, response, next) {
-    const errors = validationResult(request);
+    // const errors = validationResult(request);
   
-    if (!errors.isEmpty()) {
-      return response.status(422).json({
-        error: true,
-        message: "Validation errors",
-        data: errors,
-      });
-    }
+    // if (!errors.isEmpty()) {
+    //   return response.status(422).json({
+    //     error: true,
+    //     message: "Validation errors",
+    //     data: errors,
+    //   });
+    // }
 
     try {
       const {pol,pod} = request.query;
