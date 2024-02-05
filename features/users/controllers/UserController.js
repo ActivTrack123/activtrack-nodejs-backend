@@ -166,38 +166,38 @@ const UserController = {
 
         try {
             // const role = await Role.findById(role_id);
-            const userEmail = await User.findOne({ email: email });
+            // const userEmail = await User.findOne({ email: email });
 
-            if (userEmail) {
-                return response.status(400).json({
-                error: true,
-                message: "Email already using.",
-                data: null,
-                });
-            }
-            const userphone = await User.findOne({ phone: phone });
+            // if (userEmail) {
+            //     return response.status(400).json({
+            //     error: true,
+            //     message: "Email already using.",
+            //     data: null,
+            //     });
+            // }
+            // const userphone = await User.findOne({ phone: phone });
 
-            if (userphone) {
-                return response.status(400).json({
-                error: true,
-                message: "Phone number already using.",
-                data: null,
-                });
-            }
+            // if (userphone) {
+            //     return response.status(400).json({
+            //     error: true,
+            //     message: "Phone number already using.",
+            //     data: null,
+            //     });
+            // }
 
             const userRole = await Role.findById(role);
 
-            if(userRole.name !== 'Customer'){
-                const empId = await User.findOne({ employId: employId });
+            // if(userRole.name !== 'Customer'){
+            //     const empId = await User.findOne({ employId: employId });
 
-            if (empId) {
-                return response.status(400).json({
-                error: true,
-                message: "Employee ID shold be uniqe.",
-                data: null,
-                });
-            }
-            }
+            // if (empId) {
+            //     return response.status(400).json({
+            //     error: true,
+            //     message: "Employee ID shold be uniqe.",
+            //     data: null,
+            //     });
+            // }
+            // }
 
             if (password) {
                 await User.findByIdAndUpdate(request.params.id, {
