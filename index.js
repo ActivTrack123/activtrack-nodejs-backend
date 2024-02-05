@@ -31,6 +31,7 @@ const portDataLoadingRoutes =require("./features/portData/routes/PortDataLoading
 const portDataDischargeRoutes =require("./features/portData/routes/PortDataDischarge.routes")
 const portDataReceiptRoutes =require("./features/portData/routes/PortDataReceipt.routes")
 const dsrRoutes=require("./features/dsr/routes/Dsr.routes")
+const AirFreightRoutes = require("./features/dsr/airFreight/routes/AirFreight.routes")
 const vesselScheduleRoutes= require("./features/vesselSchedule/routes/VesselSchedule.routes")
 require("dotenv").config();
 require("dotenv").config({ path: path.join(__dirname, ".env") });
@@ -94,6 +95,7 @@ app.use("/api/v1/portDataDischarge/", portDataDischargeRoutes);
 app.use("/api/v1/portDataReceipt/", portDataReceiptRoutes);
 app.use("/api/v1/vesselschedule/", vesselScheduleRoutes);
 app.use("/api/v1/dsr/", dsrRoutes);
+app.use("/api/v1/air-freight/", AirFreightRoutes);
 // set port, listen for requests
 const APP_PORT = process.env.APP_PORT;
 app.use(require("express-status-monitor")());
