@@ -206,6 +206,18 @@ const DSRController = {
     console.log(payload);
     try {
       const createdBy = request.user.name;
+      const changeStream = DSR.watch();
+      changeStream.on("change", async (change) => {
+        console.log("DSR Change detected:", change);
+        await ActivityLog.create({
+          changeType: change.operationType,
+          documentId: change.documentKey._id,
+          changeDetails: change.updateDescription || change.fullDocument,
+          timestamp: new Date(),
+          changeBy: createdBy,
+        });
+      });
+
       const newDSR = await DSRService.createDSR(payload, request, createdBy);
       if (!newDSR.error) {
         return response.status(200).json({
