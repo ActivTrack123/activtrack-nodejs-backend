@@ -98,33 +98,62 @@ const VesselScheduleController = {
     try {
       const { por, pol, pod, vessel, voyage, vessel1, voyage1, vessel2, voyage2, route, tsPort } = request.query;
   
-      let query;
-      console.log(por, pol, pod, vessel, voyage, vessel1, voyage1, vessel2, voyage2, route, tsPort)
-      if (route === 'DIRECT') {
-        // For direct route
-        query = {
-          portOfReceipt: por,
-          portOfLoading: pol,
-          portOfDischarge: pod,
-          vesselName: vessel,
-          voyage: voyage,
-        };
-      } else {
-        // For connecting route
-        query = {
-          portOfReceipt: por,
-          portOfLoading: pol,
-          portOfDischarge: pod,
-          vesselName: vessel1,
-          voyage: voyage1,
-          connectingVessel: vessel2,
-          voyage2: voyage2,
-          tsPort: tsPort,
-        };
+      // console.log("query>>", request.query);
+
+      let query = {
+        portOfReceipt: por,
+        portOfLoading: pol,
+        portOfDischarge: pod,
+        vesselName: vessel1,
+        voyage: voyage1,
       }
+
+      if(route !== 'DIRECT'){
+        if (vessel2) query.connectingVessel = vessel2;
+        if (voyage2) query.voyage2 = voyage2;
+        if (tsPort) query.tsPort = tsPort;
+      }
+      // console.log(por, pol, pod, vessel, voyage, vessel1, voyage1, vessel2, voyage2, route, tsPort)
+      // if (route === 'DIRECT') {
+      //   // For direct route
+      //   query = {
+      //     portOfReceipt: por,
+      //     portOfLoading: pol,
+      //     portOfDischarge: pod,
+      //     vesselName: vessel,
+      //     voyage: voyage,
+      //   };
+      // } else {
+      //   // For connecting route
+      //   query = {
+      //     portOfReceipt: por,
+      //     portOfLoading: pol,
+      //     portOfDischarge: pod,
+      //     vesselName: vessel1,
+      //     voyage: voyage1,
+      //     connectingVessel: vessel2,
+      //     voyage2: voyage2,
+      //     tsPort: tsPort,
+      //   };
+      // }
+
+      // console.log("find query", query);
   
       // Your logic to find the vessel schedule based on the provided parameters
       const foundVesselSchedule = await VesselSchedule.find(query);
+
+      if (route === 'DIRECT') {
+        const connectingFields = ['cfsCutoff2', 'cyCutoff2', 'etd2', 'atd2', 'eta2', 'ata2'];
+        const hasConnectingFields = connectingFields.some(field => foundVesselSchedule.some(schedule => schedule[field]));
+      
+        if (hasConnectingFields) {
+          return response.status(400).json({
+            error: true,
+            message: "Route is DIRECT, but unexpected connecting route information is present.",
+            data: null,
+          });
+        }
+      }
   
       if (foundVesselSchedule.length > 0) {
         return response.status(200).json({
