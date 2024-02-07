@@ -138,7 +138,7 @@ const AuthController = {
       }
       }
 
-      
+
       const newUser = await User({
         _id: new mongoose.Types.ObjectId(),
         name,
