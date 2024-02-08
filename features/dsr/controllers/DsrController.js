@@ -261,16 +261,46 @@ const DSRController = {
       const updatedBy = request.user.name;
       const changeStream = DSR.watch();
 
-      changeStream.on("change", async (change) => {
+      console.log("changeStream",changeStream);
+      // changeStream.on("change", async (change) => {
+      //   console.log("DSR Change detected:", change);
+      //   await ActivityLog.create({
+      //     changeType: change.operationType,
+      //     documentId: change.documentKey._id,
+      //     changeDetails: change.updateDescription || change.fullDocument,
+      //     timestamp: new Date(),
+      //     changeBy: updatedBy,
+      //   });
+      //   // console.log("log",log);
+      //   return;
+      // });
+      changeStream.on("change",async(change)=>{
         console.log("DSR Change detected:", change);
+        try{
+          const lastActivityLogEntry = await ActivityLog.findOne().sort({ timestamp: -1 });
+          if (lastActivityLogEntry) {
+            // Calculate the time difference between the current time and the timestamp of the last activity log entry
+            const timeDifference = Date.now() - lastActivityLogEntry.timestamp.getTime();
+
+            // If the time difference is less than 2 minutes, skip creating a new activity log entry
+            if (timeDifference < (2 * 60 * 1000)) {
+                console.log("Skipping activity log creation as the last log was created within 2 minutes.");
+                return;
+            }
+        }
+        // Create a new activity log entry
         await ActivityLog.create({
           changeType: change.operationType,
           documentId: change.documentKey._id,
           changeDetails: change.updateDescription || change.fullDocument,
           timestamp: new Date(),
           changeBy: updatedBy,
-        });
       });
+      console.log("Activity log created successfully.");
+        } catch(error){
+          console.error("Error creating activity log:", error);
+        }
+      })
       const dsr = await DSRService.updateDSR(payload, request, updatedBy);
       if (!dsr.error && dsr !== null) {
         return response.status(200).json({
