@@ -126,13 +126,14 @@ const DSRController = {
       if (createdBy) query.createdBy = createdBy;
       if (consignee) query.consignee = consignee;
       if (salesPerson) query.kam = salesPerson;
-      // if (name) {
-      //   const nameRegex = { $regex: new RegExp(name), $options: "i" };
-      //   query.$or = [
-      //     { bookingReference: nameRegex },
-      //     { status: nameRegex },
-      //   ];
-      // }
+      if (name) {
+        const nameRegex = { $regex: new RegExp(name), $options: "i" };
+        query.$or = [
+          { bookingReference: nameRegex },
+          { hawb: nameRegex },
+          { mawb: nameRegex },
+        ];
+      }
 
       query.created = { $gte: twoMonthsAgo };
       const recentDSRs = await DSR.find(query)

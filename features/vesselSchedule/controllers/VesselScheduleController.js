@@ -30,8 +30,8 @@ const VesselScheduleController = {
       if (name) {
         const nameRegex = { $regex: new RegExp(name), $options: "i" };
         query.$or = [
-          { name: nameRegex },
-          { status: nameRegex },
+          { voyage: nameRegex },
+          { voyage2: nameRegex },
         ];
       }
 
