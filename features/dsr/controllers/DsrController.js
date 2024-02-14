@@ -261,7 +261,6 @@ const DSRController = {
       const updatedBy = request.user.name;
       const changeStream = DSR.watch();
 
-      console.log("changeStream",changeStream);
       // changeStream.on("change", async (change) => {
       //   console.log("DSR Change detected:", change);
       //   await ActivityLog.create({
