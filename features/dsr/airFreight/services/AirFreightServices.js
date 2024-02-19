@@ -5,6 +5,17 @@ const mongoose = require('mongoose');
 const DSRService = module.exports;
 
 DSRService.createDSR = async function (payload, request, createdBy) {
+    const lastDSR = await DSR.findOne({}, {}, { sort: { 'created': -1 } });
+    let lastBookingNumber = 0;
+
+    if (lastDSR && lastDSR.bookingReference) {
+        // Extract the number part from the last booking reference
+        const lastBookingParts = lastDSR.bookingReference.split('/');
+        lastBookingNumber = parseInt(lastBookingParts[lastBookingParts.length - 1]);
+    }
+
+    const newBookingNumber = lastBookingNumber + 1;
+    const newBookingReference = `GAL/AF/${newBookingNumber}`;
     const percentage = calculatePercentage(payload);
 
     const {
@@ -13,7 +24,7 @@ DSRService.createDSR = async function (payload, request, createdBy) {
         shipper,
         consignee,
         merchandisers,
-        bookingReference,
+        // bookingReference,
         customerReference, // Rename to match the required field name
         airline,
         cargoReadyDate,
@@ -50,7 +61,7 @@ DSRService.createDSR = async function (payload, request, createdBy) {
             shipper,
             consignee,
             merchandisers,
-            bookingReference,
+            bookingReference : newBookingReference,
             customerReference, // Rename to match the required field name
             airline,
             cargoReadyDate,

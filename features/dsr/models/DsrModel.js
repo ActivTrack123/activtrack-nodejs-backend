@@ -11,7 +11,7 @@ const MerchandiserSchema = new mongoose.Schema({
 const DSRSchema = new mongoose.Schema({
     _id: mongoose.SchemaTypes.ObjectId,
     kam: { type: String, trim: true },
-    bookingReference: { type: String, trim: true },
+    bookingReference: { type: String, trim: true, unique: true },
     shipper: { type: String, trim: true },
     consignee: { type: String, trim: true },
     merchandisers: { type: [MerchandiserSchema], default: [] },//{ type: String, trim: true },

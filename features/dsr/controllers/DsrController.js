@@ -5,6 +5,40 @@ const { validationResult } = require("express-validator");
 const { default: mongoose } = require("mongoose");
 const ActivityLog = require("../models/ActivityLog");
 
+const changeStream = DSR.watch();
+changeStream.on("change", async (change) => {
+  let changeBy = "";
+
+  if (change.fullDocument && change.fullDocument.createdBy) {
+    changeBy = change.fullDocument.createdBy;
+  } else if (change.updateDescription) {
+    const updatedFields = change.updateDescription.updatedFields;
+    const updatedBy = change.updateDescription.updatedFields.updatedBy;
+
+    if (Array.isArray(updatedBy) && updatedBy.length > 0) {
+      // Select the last updatedBy value if updatedBy is an array
+      changeBy = updatedBy[updatedBy.length - 1];
+    } else if (updatedFields) {
+      const updatedByKeys = Object.keys(updatedFields).filter((key) =>
+        key.startsWith("updatedBy")
+      );
+
+      if (updatedByKeys.length > 0) {
+        const lastUpdatedByKey = updatedByKeys[updatedByKeys.length - 1];
+        changeBy = updatedFields[lastUpdatedByKey];
+      }
+    }
+  }
+
+  await ActivityLog.create({
+    changeType: change.operationType,
+    documentId: change.documentKey._id,
+    changeDetails: change.updateDescription || change.fullDocument,
+    timestamp: new Date(),
+    changeBy: changeBy,
+  });
+});
+
 const DSRController = {
   async index(request, response, next) {
     const errors = validationResult(request);
@@ -28,7 +62,7 @@ const DSRController = {
         endDate,
         consignee,
         salesPerson,
-        createdBy
+        createdBy,
       } = request.query;
 
       // console.log(startDate, endDate, consignee, salesPerson)
@@ -45,7 +79,7 @@ const DSRController = {
       if (consignee) query.consignee = consignee;
       if (salesPerson) query.kam = salesPerson;
 
-      console.log('all dsr', query, createdBy, startDate, 'start');
+      console.log("all dsr", query, createdBy, startDate, "start");
       // console.log(query)
 
       // if (name) {
@@ -56,7 +90,7 @@ const DSRController = {
       //   ];
       // }
 
-      console.log('all dsr',query,createdBy,startDate,'start')
+      console.log("all dsr", query, createdBy, startDate, "start");
 
       const sort = {};
 
@@ -76,12 +110,12 @@ const DSRController = {
         .skip(skip)
         .sort({ created: -1 });
 
-        // console.log(dsrs)
+      // console.log(dsrs)
       const total = await DSR.countDocuments();
       const kam = await SalesPerson.find({});
 
       const salesPersons = await SalesPerson.countDocuments({});
-      console.log(dsrs.length,'result')
+      console.log(dsrs.length, "result");
       // console.log(total)
       return response.status(200).json({
         error: false,
@@ -127,13 +161,10 @@ const DSRController = {
       if (consignee) query.consignee = consignee;
       if (salesPerson) query.kam = salesPerson;
 
-      console.log("name",name);
+      console.log("name", name);
       if (name) {
         const nameRegex = { $regex: new RegExp(name), $options: "i" };
-        query.$or = [
-          { bookingReference: nameRegex },
-          { hbl: nameRegex },
-        ];
+        query.$or = [{ bookingReference: nameRegex }, { hbl: nameRegex }];
       }
 
       query.created = { $gte: twoMonthsAgo };
@@ -145,7 +176,7 @@ const DSRController = {
       const total = await DSR.countDocuments({
         created: { $gte: twoMonthsAgo },
       });
-      console.log('recentDSRs',createdBy )
+      console.log("recentDSRs", createdBy);
 
       const kam = await SalesPerson.find({});
 
@@ -208,17 +239,6 @@ const DSRController = {
     console.log(payload);
     try {
       const createdBy = request.user.name;
-      const changeStream = DSR.watch();
-      changeStream.on("change", async (change) => {
-        console.log("DSR Change detected:", change);
-        await ActivityLog.create({
-          changeType: change.operationType,
-          documentId: change.documentKey._id,
-          changeDetails: change.updateDescription || change.fullDocument,
-          timestamp: new Date(),
-          changeBy: createdBy,
-        });
-      });
 
       const newDSR = await DSRService.createDSR(payload, request, createdBy);
       if (!newDSR.error) {
@@ -259,47 +279,7 @@ const DSRController = {
 
     try {
       const updatedBy = request.user.name;
-      const changeStream = DSR.watch();
 
-      // changeStream.on("change", async (change) => {
-      //   console.log("DSR Change detected:", change);
-      //   await ActivityLog.create({
-      //     changeType: change.operationType,
-      //     documentId: change.documentKey._id,
-      //     changeDetails: change.updateDescription || change.fullDocument,
-      //     timestamp: new Date(),
-      //     changeBy: updatedBy,
-      //   });
-      //   // console.log("log",log);
-      //   return;
-      // });
-      changeStream.on("change",async(change)=>{
-        console.log("DSR Change detected:", change);
-        try{
-          const lastActivityLogEntry = await ActivityLog.findOne().sort({ timestamp: -1 });
-          if (lastActivityLogEntry) {
-            // Calculate the time difference between the current time and the timestamp of the last activity log entry
-            const timeDifference = Date.now() - lastActivityLogEntry.timestamp.getTime();
-
-            // If the time difference is less than 2 minutes, skip creating a new activity log entry
-            if (timeDifference < (2 * 60 * 1000)) {
-                console.log("Skipping activity log creation as the last log was created within 2 minutes.");
-                return;
-            }
-        }
-        // Create a new activity log entry
-        await ActivityLog.create({
-          changeType: change.operationType,
-          documentId: change.documentKey._id,
-          changeDetails: change.updateDescription || change.fullDocument,
-          timestamp: new Date(),
-          changeBy: updatedBy,
-      });
-      console.log("Activity log created successfully.");
-        } catch(error){
-          console.error("Error creating activity log:", error);
-        }
-      })
       const dsr = await DSRService.updateDSR(payload, request, updatedBy);
       if (!dsr.error && dsr !== null) {
         return response.status(200).json({
