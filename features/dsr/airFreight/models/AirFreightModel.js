@@ -15,7 +15,7 @@ const AirFreightSchema = new mongoose.Schema({
     shipper: { type: String, trim: true },
     consignee: { type: String, trim: true },
     merchandisers: { type: [MerchandiserSchema], default: [] },//{ type: String, trim: true },
-    bookingReference: { type: String, trim: true },
+    bookingReference: { type: String, trim: true, unique: true },
     customerReference: { type: String, trim: true },
     airline: { type: String, trim: true },
     cargoReadyDate: { type: Date },
