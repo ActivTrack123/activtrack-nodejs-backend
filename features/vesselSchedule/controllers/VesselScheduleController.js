@@ -96,12 +96,12 @@ const VesselScheduleController = {
     }
   
     try {
-      const { por, pol, pod, vessel, voyage, vessel1, voyage1, vessel2, voyage2, route, tsPort } = request.query;
+      const { pol, pod, vessel, voyage, vessel1, voyage1, vessel2, voyage2, route, tsPort } = request.query;
   
       // console.log("query>>", request.query);
 
       let query = {
-        portOfReceipt: por,
+        // portOfReceipt: por,
         portOfLoading: pol,
         portOfDischarge: pod,
         vesselName: vessel1,

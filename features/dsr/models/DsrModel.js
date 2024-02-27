@@ -59,6 +59,7 @@ const DSRSchema = new mongoose.Schema({
     legAtd2: { type: Date },
     legEta2: { type: Date },
     legAta2: { type: Date },
+    carrier: { type: String, default: '' },
     created: { type: Date, default: Date.now },
     createdBy:{type : String , trim: true},
     updatedBy:[
