@@ -21,6 +21,8 @@ const VesselScheduleController = {
         limit = 10,
         query: name,
         status,
+        pol,
+        pod,
         sortBy,
       } = request.query;
 
@@ -32,8 +34,12 @@ const VesselScheduleController = {
         query.$or = [
           { voyage: nameRegex },
           { voyage2: nameRegex },
+          { portOfLoading: nameRegex}
         ];
       }
+
+      if (pol) query.portOfLoading = pol;
+      if (pod) query.portOfDischarge = pod;
 
       if (status) {
         const statusArr = status.split(",");
