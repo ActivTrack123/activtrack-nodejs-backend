@@ -68,7 +68,8 @@ DSRService.createDSR = async function (payload, request, createdBy) {
         legEtd2,
         legAtd2,
         legEta2,
-        legAta2
+        legAta2,
+        carrier
     } = payload;
     
 
@@ -128,6 +129,7 @@ DSRService.createDSR = async function (payload, request, createdBy) {
             legAta2,
             createdBy,
             percentage,
+            carrier
         });
 
         return newDSR;
@@ -188,7 +190,8 @@ DSRService.updateDSR = async function (payload, request, updatedBy) {
         legEtd2,
         legAtd2,
         legEta2,
-        legAta2
+        legAta2,
+        carrier
     } = payload;
 
     try {
@@ -245,6 +248,7 @@ DSRService.updateDSR = async function (payload, request, updatedBy) {
             legAta2,
             $push: { updatedBy: updatedBy },
             percentage,
+            carrier
         });
 
         return dsr;
