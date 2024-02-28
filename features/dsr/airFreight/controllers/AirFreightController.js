@@ -146,6 +146,7 @@ const DSRController = {
         limit = 10,
         query: name,
         consignee,
+        status,
         salesPerson,
         createdBy,
       } = request.query;
@@ -159,6 +160,7 @@ const DSRController = {
       const query = {};
       if (createdBy) query.createdBy = createdBy;
       if (consignee) query.consignee = consignee;
+      if (status) query.status = status;
       if (salesPerson) query.kam = salesPerson;
       if (name) {
         const nameRegex = { $regex: new RegExp(name), $options: "i" };
