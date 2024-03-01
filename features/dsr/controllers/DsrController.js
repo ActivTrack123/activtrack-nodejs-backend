@@ -29,31 +29,29 @@ changeStream.on("change", async (change) => {
       }
     }
   }
+  const documentId = change.documentKey._id;
+  try {
+    const existingLog = await ActivityLog.findOne({ documentId });
+    if(existingLog){
+      existingLog.changeType = change.operationType;
+      existingLog.changeDetails = change.updateDescription || change.fullDocument;
+      existingLog.timestamp = new Date();
+      existingLog.changeBy = changeBy;
 
-  const existingActivityLog = await ActivityLog.findOne({
-    changeType: change.operationType,
-    documentId: change.documentKey._id,
-    changeDetails: change.updateDescription || change.fullDocument,
-    timestamp: new Date(),
-    changeBy: changeBy,
-  });
-
-  if (!existingActivityLog) {
-    console.log("no existing activity logs");
-    await ActivityLog.create({
-      changeType: change.operationType,
-      documentId: change.documentKey._id,
-      changeDetails: change.updateDescription || change.fullDocument,
-      timestamp: new Date(),
-      changeBy: changeBy,
-    });
-  } else {
-    console.log("activity log already exist");
-    // return response.status(200).json({
-    //   error: false,
-    //   message: "Activity log already exist.", 
-    //   data: {},
-    // });
+      await existingLog.save();
+      console.log('Activity log updated:', existingLog);
+    } else {
+      const newLog = new ActivityLog({
+        changeType: change.operationType,
+        documentId,
+        changeDetails: change.updateDescription || change.fullDocument,
+        changeBy: changeBy,
+      })
+      await newLog.save();
+      console.log('New activity log created:', newLog);
+    }
+  } catch (error) {
+    console.error('Error processing change:', error);
   }
 
   // await ActivityLog.create({
