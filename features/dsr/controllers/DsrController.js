@@ -38,21 +38,31 @@ changeStream.on("change", async (change) => {
     changeBy: changeBy,
   });
 
-  if (existingActivityLog) {
-    return response.status(200).json({
-      error: false,
-      message: "Activity log already exist.", 
-      data: {},
+  if (!existingActivityLog) {
+    console.log("no existing activity logs");
+    await ActivityLog.create({
+      changeType: change.operationType,
+      documentId: change.documentKey._id,
+      changeDetails: change.updateDescription || change.fullDocument,
+      timestamp: new Date(),
+      changeBy: changeBy,
     });
+  } else {
+    console.log("activity log already exist");
+    // return response.status(200).json({
+    //   error: false,
+    //   message: "Activity log already exist.", 
+    //   data: {},
+    // });
   }
 
-  await ActivityLog.create({
-    changeType: change.operationType,
-    documentId: change.documentKey._id,
-    changeDetails: change.updateDescription || change.fullDocument,
-    timestamp: new Date(),
-    changeBy: changeBy,
-  });
+  // await ActivityLog.create({
+  //   changeType: change.operationType,
+  //   documentId: change.documentKey._id,
+  //   changeDetails: change.updateDescription || change.fullDocument,
+  //   timestamp: new Date(),
+  //   changeBy: changeBy,
+  // });
 });
 
 const DSRController = {
