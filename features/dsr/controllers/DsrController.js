@@ -30,6 +30,22 @@ changeStream.on("change", async (change) => {
     }
   }
 
+  const existingActivityLog = await ActivityLog.findOne({
+    changeType: change.operationType,
+    documentId: change.documentKey._id,
+    changeDetails: change.updateDescription || change.fullDocument,
+    timestamp: new Date(),
+    changeBy: changeBy,
+  });
+
+  if (existingActivityLog) {
+    return response.status(200).json({
+      error: false,
+      message: "Activity log already exist.",
+      data: {},
+    });
+  }
+
   await ActivityLog.create({
     changeType: change.operationType,
     documentId: change.documentKey._id,
