@@ -1,7 +1,6 @@
 const VesselSchedule = require("../models/VesselScheduleModel");
 const VesselScheduleService = require("../services/VesselScheduleServices");
 const { validationResult } = require("express-validator");
-const { default: mongoose } = require("mongoose");
 
 const VesselScheduleController = {
   async index(request, response, next) {
