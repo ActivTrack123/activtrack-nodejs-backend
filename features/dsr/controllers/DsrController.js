@@ -42,7 +42,7 @@ changeStream.on("change", async (change) => {
       await existingLog.save();
       console.log("existing log", existingLog);
     } else {
-      await ActivityLog.create({
+      await new ActivityLog({
         documentId: change.documentKey._id,
         changes: [{
           changeType: change.operationType,
@@ -50,7 +50,7 @@ changeStream.on("change", async (change) => {
           timestamp: new Date(),
           changeBy: changeBy,
         }],
-      });
+      }).save();
     }
   } catch (error) {
     console.error("Error occurred while logging activity:", error);
