@@ -33,14 +33,21 @@ changeStream.on("change", async (change) => {
   try {
     const existingLog = await ActivityLog.findOne({ documentId: change.documentKey._id });
     if (existingLog) {
-      existingLog.changes.push({
-        changeType: change.operationType,
-        changeDetails: change.updateDescription || change.fullDocument,
-        timestamp: new Date(),
-        changeBy: changeBy,
+      const existingChanges = existingLog.changes;
+      const isNewChange = existingChanges.every((existingChange) => {
+        return JSON.stringify(existingChange.changeDetails) !== JSON.stringify(change.updateDescription || change.fullDocument);
       });
-      await existingLog.save();
-      console.log("existing log", existingLog);
+      if(isNewChange) {
+        existingLog.changes.push({
+          changeType: change.operationType,
+          changeDetails: change.updateDescription || change.fullDocument,
+          timestamp: new Date(),
+          changeBy: changeBy,
+        });
+        await existingLog.save();
+        console.log("existing log", existingLog);
+      }
+      
     } else {
       await new ActivityLog({
         documentId: change.documentKey._id,
