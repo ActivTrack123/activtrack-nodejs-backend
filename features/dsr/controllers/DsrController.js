@@ -29,30 +29,56 @@ changeStream.on("change", async (change) => {
       }
     }
   }
-  const documentId = change.documentKey._id;
-  try {
-    const existingLog = await ActivityLog.findOne({ documentId });
-    if(existingLog){
-      existingLog.changeType = change.operationType;
-      existingLog.changeDetails = change.updateDescription || change.fullDocument;
-      existingLog.timestamp = new Date();
-      existingLog.changeBy = changeBy;
 
-      await existingLog.save();
-      console.log('Activity log updated:', existingLog);
-    } else {
-      const newLog = new ActivityLog({
+  try {
+    const existingLog = await ActivityLog.findOne({ documentId: change.documentKey._id });
+    if (existingLog) {
+      existingLog.changes.push({
         changeType: change.operationType,
-        documentId,
         changeDetails: change.updateDescription || change.fullDocument,
+        timestamp: new Date(),
         changeBy: changeBy,
-      })
-      await newLog.save();
-      console.log('New activity log created:', newLog);
+      });
+      await existingLog.save();
+      console.log("existing log", existingLog);
+    } else {
+      await ActivityLog.create({
+        documentId: change.documentKey._id,
+        changes: [{
+          changeType: change.operationType,
+          changeDetails: change.updateDescription || change.fullDocument,
+          timestamp: new Date(),
+          changeBy: changeBy,
+        }],
+      });
     }
   } catch (error) {
-    console.error('Error processing change:', error);
+    console.error("Error occurred while logging activity:", error);
   }
+  // const documentId = change.documentKey._id;
+  // try {
+  //   const existingLog = await ActivityLog.findOne({ documentId });
+  //   if(existingLog){
+  //     existingLog.changeType = change.operationType;
+  //     existingLog.changeDetails = change.updateDescription || change.fullDocument;
+  //     existingLog.timestamp = new Date();
+  //     existingLog.changeBy = changeBy;
+
+  //     await existingLog.save();
+  //     console.log('Activity log updated:', existingLog);
+  //   } else {
+  //     const newLog = new ActivityLog({
+  //       changeType: change.operationType,
+  //       documentId,
+  //       changeDetails: change.updateDescription || change.fullDocument,
+  //       changeBy: changeBy,
+  //     })
+  //     await newLog.save();
+  //     console.log('New activity log created:', newLog);
+  //   }
+  // } catch (error) {
+  //   console.error('Error processing change:', error);
+  // }
 
   // await ActivityLog.create({
   //   changeType: change.operationType,
@@ -361,6 +387,8 @@ const DSRController = {
       const dsrActivityLogs = await ActivityLog.find({
         documentId: request.params.id,
       }).sort({ timestamp: -1 });
+
+      console.log("dsrActivity log", dsrActivityLogs);
 
       return response.status(200).json({
         error: false,
