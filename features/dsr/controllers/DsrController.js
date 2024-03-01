@@ -41,7 +41,7 @@ changeStream.on("change", async (change) => {
   if (existingActivityLog) {
     return response.status(200).json({
       error: false,
-      message: "Activity log already exist.",
+      message: "Activity log already exist.", 
       data: {},
     });
   }
