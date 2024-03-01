@@ -30,13 +30,38 @@ changeStream.on("change", async (change) => {
     }
   }
 
-  await ActivityLog.create({
-    changeType: change.operationType,
-    documentId: change.documentKey._id,
-    changeDetails: change.updateDescription || change.fullDocument,
-    timestamp: new Date(),
-    changeBy: changeBy,
-  });
+  const documentId = change.documentKey._id;
+  try {
+    const existingLog = await ActivityLog.findOne({ documentId });
+    if(existingLog){
+      existingLog.changeType = change.operationType;
+      existingLog.changeDetails = change.updateDescription || change.fullDocument;
+      existingLog.timestamp = new Date();
+      existingLog.changeBy = changeBy;
+
+      await existingLog.save();
+      console.log('Activity log updated:', existingLog);
+    } else {
+      const newLog = new ActivityLog({
+        changeType: change.operationType,
+        documentId,
+        changeDetails: change.updateDescription || change.fullDocument,
+        changeBy: changeBy,
+      })
+      await newLog.save();
+      console.log('New activity log created:', newLog);
+    }
+  } catch (error) {
+    console.error('Error processing change:', error);
+  }
+
+  // await ActivityLog.create({
+  //   changeType: change.operationType,
+  //   documentId: change.documentKey._id,
+  //   changeDetails: change.updateDescription || change.fullDocument,
+  //   timestamp: new Date(),
+  //   changeBy: changeBy,
+  // });
 });
 
 const DSRController = {
