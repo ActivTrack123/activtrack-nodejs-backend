@@ -30,29 +30,94 @@ changeStream.on("change", async (change) => {
     }
   }
 
-  const existingActivityLog = await ActivityLog.findOne({
-    changeType: change.operationType,
-    documentId: change.documentKey._id,
-    changeDetails: change.updateDescription || change.fullDocument,
-    timestamp: new Date(),
-    changeBy: changeBy,
-  });
+  // try {
+  //   const existingLog = await ActivityLog.findOne({ documentId: change.documentKey._id });
+  //   if (existingLog) {
+  //     const existingChanges = existingLog.changes;
+  //     const isNewChange = existingChanges.every((existingChange) => {
+  //       return JSON.stringify(existingChange.changeDetails) !== JSON.stringify(change.updateDescription || change.fullDocument);
+  //     });
+  //     if(isNewChange) {
+  //       existingLog.changes.push({
+  //         changeType: change.operationType,
+  //         changeDetails: change.updateDescription || change.fullDocument,
+  //         timestamp: new Date(),
+  //         changeBy: changeBy,
+  //       });
+  //       await existingLog.save();
+  //       console.log("existing log", existingLog);
+  //     }
+      
+  //   } else {
+  //     await new ActivityLog({
+  //       documentId: change.documentKey._id,
+  //       changes: [{
+  //         changeType: change.operationType,
+  //         changeDetails: change.updateDescription || change.fullDocument,
+  //         timestamp: new Date(),
+  //         changeBy: changeBy,
+  //       }],
+  //     }).save();
+  //   }
+  // } catch (error) {
+  //   console.error("Error occurred while logging activity:", error);
+  // }
+  // const documentId = change.documentKey._id;
+  // try {
+  //   const existingLog = await ActivityLog.findOne({ documentId });
+  //   if(existingLog){
+  //     existingLog.changeType = change.operationType;
+  //     existingLog.changeDetails = change.updateDescription || change.fullDocument;
+  //     existingLog.timestamp = new Date();
+  //     existingLog.changeBy = changeBy;
 
-  if (existingActivityLog) {
-    return response.status(200).json({
-      error: false,
-      message: "Activity log already exist.", 
-      data: {},
+  //     await existingLog.save();
+  //     console.log('Activity log updated:', existingLog);
+  //   } else {
+  //     const newLog = new ActivityLog({
+  //       changeType: change.operationType,
+  //       documentId,
+  //       changeDetails: change.updateDescription || change.fullDocument,
+  //       changeBy: changeBy,
+  //     })
+  //     await newLog.save();
+  //     console.log('New activity log created:', newLog);
+  //   }
+  // } catch (error) {
+  //   console.error('Error processing change:', error);
+  // }
+
+  try {
+    const existingLog = await ActivityLog.findOne({
+      changeType: change.operationType,
+      documentId: change.documentKey._id,
+      changeDetails: change.updateDescription || change.fullDocument,
+      changeBy: changeBy,
     });
+    if (existingLog) {
+      console.log("Activity log already exists for this change.");
+      return existingLog;
+    }
+    const createdlog = await ActivityLog.create({
+      changeType: change.operationType,
+      documentId: change.documentKey._id,
+      changeDetails: change.updateDescription || change.fullDocument,
+      timestamp: new Date(),
+      changeBy: changeBy,
+    });
+    console.log("activity log created", createdlog);
+    return createdlog;
+  } catch (error) {
+    console.log("error while creating activity log: ", error);
   }
 
-  await ActivityLog.create({
-    changeType: change.operationType,
-    documentId: change.documentKey._id,
-    changeDetails: change.updateDescription || change.fullDocument,
-    timestamp: new Date(),
-    changeBy: changeBy,
-  });
+  // await ActivityLog.create({
+  //   changeType: change.operationType,
+  //   documentId: change.documentKey._id,
+  //   changeDetails: change.updateDescription || change.fullDocument,
+  //   timestamp: new Date(),
+  //   changeBy: changeBy,
+  // });
 });
 
 const DSRController = {
@@ -353,6 +418,8 @@ const DSRController = {
       const dsrActivityLogs = await ActivityLog.find({
         documentId: request.params.id,
       }).sort({ timestamp: -1 });
+
+      console.log("dsrActivity log", dsrActivityLogs);
 
       return response.status(200).json({
         error: false,
