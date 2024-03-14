@@ -246,7 +246,7 @@ const DSRController = {
 
       console.log("name", name);
       if (name) {
-        const nameRegex = { $regex: new RegExp(name), $options: "i" };
+        const nameRegex = { $regex: new RegExp(name) };
         query.$or = [{ bookingReference: nameRegex }, { hbl: nameRegex }];
       }
 
