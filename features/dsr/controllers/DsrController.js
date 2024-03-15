@@ -245,10 +245,17 @@ const DSRController = {
       if (salesPerson) query.kam = salesPerson;
 
       console.log("name", name);
+      // if (name) {
+      //   const nameRegex = { $regex: new RegExp(name) };
+      //   query.$or = [{ bookingReference: nameRegex }, { hbl: nameRegex }];
+      // }
+
       if (name) {
-        const nameRegex = { $regex: new RegExp(name) };
-        query.$or = [{ bookingReference: nameRegex }, { hbl: nameRegex }];
-      }
+        const bookingReferenceExactMatch = { bookingReference: name };
+        const hblExactMatch = { hbl: name };
+        query.$or = [bookingReferenceExactMatch, hblExactMatch];
+    }
+    
 
       query.created = { $gte: twoMonthsAgo };
       const recentDSRs = await DSR.find(query)
