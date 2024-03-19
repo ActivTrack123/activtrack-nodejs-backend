@@ -249,24 +249,25 @@ async getVesselSheduleNew(request, response, next) {
 
         // Convert date fields to DD/MM/YYYY format
         foundVesselSchedule = foundVesselSchedule.map(schedule => {
-            return {
-                ...schedule._doc,
-                bkgCutoff: schedule.bkgCutoff ? moment(schedule.bkgCutoff).format('DD/MM/YYYY') : '',
-                cfsCutoff1: schedule.cfsCutoff1 ? moment(schedule.cfsCutoff1).format('DD/MM/YYYY') : '',
-                cyCutoff1: schedule.cyCutoff1 ? moment(schedule.cyCutoff1).format('DD/MM/YYYY') : '',
-                etd1: schedule.etd1 ? moment(schedule.etd1).format('DD/MM/YYYY') : '',
-                ata1: schedule.ata1 ? moment(schedule.ata1).format('DD/MM/YYYY') : '',
-                eta1: schedule.eta1 ? moment(schedule.eta1).format('DD/MM/YYYY') : '',
-                atd1: schedule.atd1 ? moment(schedule.atd1).format('DD/MM/YYYY') : '',
-                cfsCutoff2: schedule.cfsCutoff2 ? moment(schedule.cfsCutoff2).format('DD/MM/YYYY') : '',
-                cyCutoff2: schedule.cyCutoff2 ? moment(schedule.cyCutoff2).format('DD/MM/YYYY') : '',
-                etd2: schedule.etd2 ? moment(schedule.etd2).format('DD/MM/YYYY') : '',
-                atd2: schedule.atd2 ? moment(schedule.atd2).format('DD/MM/YYYY') : '',
-                eta2: schedule.eta2 ? moment(schedule.eta2).format('DD/MM/YYYY') : '',
-                ata2: schedule.ata2 ? moment(schedule.ata2).format('DD/MM/YYYY') : '',
-                created: schedule.created ? moment(schedule.created).format('DD/MM/YYYY') : '',
-            };
-        });
+          return {
+              ...schedule._doc,
+              bkgCutoff: schedule.bkgCutoff ? moment.utc(schedule.bkgCutoff).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+              cfsCutoff1: schedule.cfsCutoff1 ? moment.utc(schedule.cfsCutoff1).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+              cyCutoff1: schedule.cyCutoff1 ? moment.utc(schedule.cyCutoff1).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+              etd1: schedule.etd1 ? moment.utc(schedule.etd1).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+              ata1: schedule.ata1 ? moment.utc(schedule.ata1).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+              eta1: schedule.eta1 ? moment.utc(schedule.eta1).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+              atd1: schedule.atd1 ? moment.utc(schedule.atd1).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+              cfsCutoff2: schedule.cfsCutoff2 ? moment.utc(schedule.cfsCutoff2).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+              cyCutoff2: schedule.cyCutoff2 ? moment.utc(schedule.cyCutoff2).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+              etd2: schedule.etd2 ? moment.utc(schedule.etd2).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+              atd2: schedule.atd2 ? moment.utc(schedule.atd2).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+              eta2: schedule.eta2 ? moment.utc(schedule.eta2).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+              ata2: schedule.ata2 ? moment.utc(schedule.ata2).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+              created: schedule.created ? moment.utc(schedule.created).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+          };
+      });
+      
 
         console.log("req came", pol, pod);
         return response.status(200).json(foundVesselSchedule);
@@ -290,20 +291,20 @@ async  getVesselSheduleId(request, response, next) {
       // Convert date fields to DD/MM/YYYY format or empty string if null
       const formattedVesselSchedule = {
           ...vesselSchedule._doc,
-          bkgCutoff: vesselSchedule.bkgCutoff ? moment(vesselSchedule.bkgCutoff).format('DD/MM/YYYY') : '',
-          cfsCutoff1: vesselSchedule.cfsCutoff1 ? moment(vesselSchedule.cfsCutoff1).format('DD/MM/YYYY') : '',
-          cyCutoff1: vesselSchedule.cyCutoff1 ? moment(vesselSchedule.cyCutoff1).format('DD/MM/YYYY') : '',
-          etd1: vesselSchedule.etd1 ? moment(vesselSchedule.etd1).format('DD/MM/YYYY') : '',
-          ata1: vesselSchedule.ata1 ? moment(vesselSchedule.ata1).format('DD/MM/YYYY') : '',
-          eta1: vesselSchedule.eta1 ? moment(vesselSchedule.eta1).format('DD/MM/YYYY') : '',
-          atd1: vesselSchedule.atd1 ? moment(vesselSchedule.atd1).format('DD/MM/YYYY') : '',
-          cfsCutoff2: vesselSchedule.cfsCutoff2 ? moment(vesselSchedule.cfsCutoff2).format('DD/MM/YYYY') : '',
-          cyCutoff2: vesselSchedule.cyCutoff2 ? moment(vesselSchedule.cyCutoff2).format('DD/MM/YYYY') : '',
-          etd2: vesselSchedule.etd2 ? moment(vesselSchedule.etd2).format('DD/MM/YYYY') : '',
-          atd2: vesselSchedule.atd2 ? moment(vesselSchedule.atd2).format('DD/MM/YYYY') : '',
-          eta2: vesselSchedule.eta2 ? moment(vesselSchedule.eta2).format('DD/MM/YYYY') : '',
-          ata2: vesselSchedule.ata2 ? moment(vesselSchedule.ata2).format('DD/MM/YYYY') : '',
-          created: vesselSchedule.created ? moment(vesselSchedule.created).format('DD/MM/YYYY') : '',
+          bkgCutoff: vesselSchedule.bkgCutoff ? moment.utc(vesselSchedule.bkgCutoff).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+            cfsCutoff1: vesselSchedule.cfsCutoff1 ? moment.utc(vesselSchedule.cfsCutoff1).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+            cyCutoff1: vesselSchedule.cyCutoff1 ? moment.utc(vesselSchedule.cyCutoff1).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+            etd1: vesselSchedule.etd1 ? moment.utc(vesselSchedule.etd1).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+            ata1: vesselSchedule.ata1 ? moment.utc(vesselSchedule.ata1).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+            eta1: vesselSchedule.eta1 ? moment.utc(vesselSchedule.eta1).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+            atd1: vesselSchedule.atd1 ? moment.utc(vesselSchedule.atd1).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+            cfsCutoff2: vesselSchedule.cfsCutoff2 ? moment.utc(vesselSchedule.cfsCutoff2).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+            cyCutoff2: vesselSchedule.cyCutoff2 ? moment.utc(vesselSchedule.cyCutoff2).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+            etd2: vesselSchedule.etd2 ? moment.utc(vesselSchedule.etd2).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+            atd2: vesselSchedule.atd2 ? moment.utc(vesselSchedule.atd2).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+            eta2: vesselSchedule.eta2 ? moment.utc(vesselSchedule.eta2).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+            ata2: vesselSchedule.ata2 ? moment.utc(vesselSchedule.ata2).utcOffset('+05:30').format('DD/MM/YYYY') : '',
+            created: vesselSchedule.created ? moment.utc(vesselSchedule.created).utcOffset('+05:30').format('DD/MM/YYYY') : '',
       };
 
       return response.status(200).json(formattedVesselSchedule);
