@@ -282,20 +282,40 @@ async getVesselSheduleNew(request, response, next) {
 },
 
 
-  async getVesselSheduleId(request, response, next) {
-    try {
+async  getVesselSheduleId(request, response, next) {
+  try {
       const vesselSchedule = await VesselSchedule.findById(request.params.id);
-      console.log("vessel schedule by id ", request.params.id)
-      return response.status(200).json(vesselSchedule);
-    } catch (error) {
+      console.log("vessel schedule by id ", request.params.id);
+
+      // Convert date fields to DD/MM/YYYY format or empty string if null
+      const formattedVesselSchedule = {
+          ...vesselSchedule._doc,
+          bkgCutoff: vesselSchedule.bkgCutoff ? moment(vesselSchedule.bkgCutoff).format('DD/MM/YYYY') : '',
+          cfsCutoff1: vesselSchedule.cfsCutoff1 ? moment(vesselSchedule.cfsCutoff1).format('DD/MM/YYYY') : '',
+          cyCutoff1: vesselSchedule.cyCutoff1 ? moment(vesselSchedule.cyCutoff1).format('DD/MM/YYYY') : '',
+          etd1: vesselSchedule.etd1 ? moment(vesselSchedule.etd1).format('DD/MM/YYYY') : '',
+          ata1: vesselSchedule.ata1 ? moment(vesselSchedule.ata1).format('DD/MM/YYYY') : '',
+          eta1: vesselSchedule.eta1 ? moment(vesselSchedule.eta1).format('DD/MM/YYYY') : '',
+          atd1: vesselSchedule.atd1 ? moment(vesselSchedule.atd1).format('DD/MM/YYYY') : '',
+          cfsCutoff2: vesselSchedule.cfsCutoff2 ? moment(vesselSchedule.cfsCutoff2).format('DD/MM/YYYY') : '',
+          cyCutoff2: vesselSchedule.cyCutoff2 ? moment(vesselSchedule.cyCutoff2).format('DD/MM/YYYY') : '',
+          etd2: vesselSchedule.etd2 ? moment(vesselSchedule.etd2).format('DD/MM/YYYY') : '',
+          atd2: vesselSchedule.atd2 ? moment(vesselSchedule.atd2).format('DD/MM/YYYY') : '',
+          eta2: vesselSchedule.eta2 ? moment(vesselSchedule.eta2).format('DD/MM/YYYY') : '',
+          ata2: vesselSchedule.ata2 ? moment(vesselSchedule.ata2).format('DD/MM/YYYY') : '',
+          created: vesselSchedule.created ? moment(vesselSchedule.created).format('DD/MM/YYYY') : '',
+      };
+
+      return response.status(200).json(formattedVesselSchedule);
+  } catch (error) {
       console.error(error);
       return response.status(400).json({
-        error: true,
-        message: "Failed to fetch VesselSchedule!",
-        data: null,
+          error: true,
+          message: "Failed to fetch VesselSchedule!",
+          data: null,
       });
-    }
-  },
+  }
+},
 
   async show(request, response, next) {
     try {
