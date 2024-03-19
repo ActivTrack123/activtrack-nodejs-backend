@@ -43,4 +43,8 @@ router.get('/find', verifyToken, VesselScheduleController.findVesselSchedule);
 // Get by params Method
 router.get('/find-vessel', VesselScheduleController.getVesselShedule);
 
+
+// Get by params Method
+router.get('/find-vessel-new', VesselScheduleController.getVesselSheduleNew);
+
 module.exports = router;

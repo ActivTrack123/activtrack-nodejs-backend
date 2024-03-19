@@ -1,6 +1,7 @@
 const VesselSchedule = require("../models/VesselScheduleModel");
 const VesselScheduleService = require("../services/VesselScheduleServices");
 const { validationResult } = require("express-validator");
+const moment = require('moment');
 
 const VesselScheduleController = {
   async index(request, response, next) {
@@ -224,6 +225,62 @@ const VesselScheduleController = {
       });
     }
   },
+
+  
+
+async getVesselSheduleNew(request, response, next) {
+    try {
+        const { pol, pod } = request.query;
+        const query = {
+            portOfLoading: pol,
+            portOfDischarge: pod
+        };
+        let foundVesselSchedule = [];
+
+        if (pol === 'All' && pod === 'All') {
+            foundVesselSchedule = await VesselSchedule.find({});
+        } else if (pol === 'All') {
+            foundVesselSchedule = await VesselSchedule.find({ portOfDischarge: pod });
+        } else if (pod === 'All') {
+            foundVesselSchedule = await VesselSchedule.find({ portOfLoading: pol });
+        } else {
+            foundVesselSchedule = await VesselSchedule.find(query);
+        }
+
+        // Convert date fields to DD/MM/YYYY format
+        foundVesselSchedule = foundVesselSchedule.map(schedule => {
+            return {
+                ...schedule._doc,
+                bkgCutoff: schedule.bkgCutoff ? moment(schedule.bkgCutoff).format('DD/MM/YYYY') : '',
+                cfsCutoff1: schedule.cfsCutoff1 ? moment(schedule.cfsCutoff1).format('DD/MM/YYYY') : '',
+                cyCutoff1: schedule.cyCutoff1 ? moment(schedule.cyCutoff1).format('DD/MM/YYYY') : '',
+                etd1: schedule.etd1 ? moment(schedule.etd1).format('DD/MM/YYYY') : '',
+                ata1: schedule.ata1 ? moment(schedule.ata1).format('DD/MM/YYYY') : '',
+                eta1: schedule.eta1 ? moment(schedule.eta1).format('DD/MM/YYYY') : '',
+                atd1: schedule.atd1 ? moment(schedule.atd1).format('DD/MM/YYYY') : '',
+                cfsCutoff2: schedule.cfsCutoff2 ? moment(schedule.cfsCutoff2).format('DD/MM/YYYY') : '',
+                cyCutoff2: schedule.cyCutoff2 ? moment(schedule.cyCutoff2).format('DD/MM/YYYY') : '',
+                etd2: schedule.etd2 ? moment(schedule.etd2).format('DD/MM/YYYY') : '',
+                atd2: schedule.atd2 ? moment(schedule.atd2).format('DD/MM/YYYY') : '',
+                eta2: schedule.eta2 ? moment(schedule.eta2).format('DD/MM/YYYY') : '',
+                ata2: schedule.ata2 ? moment(schedule.ata2).format('DD/MM/YYYY') : '',
+                created: schedule.created ? moment(schedule.created).format('DD/MM/YYYY') : '',
+            };
+        });
+
+        console.log("req came", pol, pod);
+        return response.status(200).json(foundVesselSchedule);
+
+    } catch (error) {
+        console.error(error);
+        return response.status(500).json({
+            error: true,
+            message: "Failed to find VesselSchedule.",
+            data: null,
+        });
+    }
+},
+
 
   async getVesselSheduleId(request, response, next) {
     try {
