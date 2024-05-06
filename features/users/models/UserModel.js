@@ -75,6 +75,12 @@ const UserSchema = new Schema({
     type: String,
     // required: true,
   },
+  dsr: { // Embedding dsr directly into the UserSchema
+    sdsr: [String],
+    sadsr: [String],
+    adsr: [String],
+    aadsr: [String]
+  },
   // documents: {
   //     type: String,
   //     trim: true,
@@ -85,6 +91,7 @@ const UserSchema = new Schema({
     trim: true,
     required: false,
   },
+  
   created: {
     type: Date,
     default: Date.now,

@@ -63,6 +63,20 @@ router.put('/:id/update', [
     // validateURLDomain('photo').withMessage('Invalid image URL'),
 ], verifyToken, UserController.update)
 
+router.put('/:id/updatecol', [
+    check('dsr').not().isEmpty(),
+    // check('email').not().isEmpty(),
+    // check('phone').not().isEmpty(),
+    // check('dob').not().isEmpty(),
+    // check('address').not().isEmpty(),
+    // check('startDate').not().isEmpty(),
+    // check('note').not().isEmpty(),
+    // check('role').not().isEmpty(),
+    // check('jobRole').not().isEmpty(),
+    // validateURLDomain('document').withMessage('Invalid image URL'),
+    // validateURLDomain('photo').withMessage('Invalid image URL'),
+], verifyToken, UserController.updateColumn)
+
 //Delete by ID Method
 router.delete('/:id/delete', verifyToken, UserController.delete)
 

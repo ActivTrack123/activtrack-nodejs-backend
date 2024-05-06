@@ -161,7 +161,7 @@ const UserController = {
       
         // console.log("update user", request.body);
 
-        const { name, email, password, phone, dateOfBirth, address, startDate, note, role, jobRole, document, photo,company, employId,status } = request.body;
+        const { name, email, password, phone, dateOfBirth, address, startDate, note, role, jobRole, document, photo,company, employId,status,dsr } = request.body;
 
 
         try {
@@ -224,7 +224,8 @@ const UserController = {
                 jobRole,
                 company,
                 employId,
-                status
+                status,
+                dsr
             }, { new: true });
 
             if (user != null) {
@@ -250,6 +251,51 @@ const UserController = {
             });
         }
     },
+
+    async updateColumn(request, response, next) {
+        console.log("request came")
+        const errors = validationResult(request);
+        console.log(errors)
+        if (!errors.isEmpty()) {
+            return response.status(422).json({
+                error: true,
+                message: 'Validation errors',
+                data: errors,
+            });
+        }
+      
+        const { dsr } = request.body; // Only extract dsr from request.body
+    
+        try {
+            const user = await User.findByIdAndUpdate(request.params.id, {
+                $set: { dsr } // Use $set to ensure only the dsr field is updated
+            }, { new: true });
+    
+            if (user) {
+                return response.status(200).json({
+                    error: false,
+                    message: 'User updated!',
+                    data: user,
+                });
+            } else {
+                return response.status(400).json({
+                    error: true,
+                    message: 'Failed to update user!',
+                    data: null,
+                });
+            }
+        } catch (error) {
+            console.log(error)
+            return response.status(400).json({
+                error: true,
+                message: 'Failed to update user!',
+                data: null,
+            });
+        }
+    },
+    
+
+
 
     async delete(request, response, next) {
         try {
